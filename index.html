@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sunken Robotics — Autonomous Underwater Inspection</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#06101e;
+  --ink2:#0a1628;
+  --cyan:#00d4ff;
+  --teal:#00b8a9;
+  --mint:#00ffc3;
+  --fog:#e8f2fa;
+  --fog2:#f4f8fc;
+  --muted:#6b8ba4;
+  --white:#ffffff;
+  --border-d:rgba(0,212,255,0.14);
+  --border-l:rgba(10,22,40,0.1);
+  --red:#ff4d6d;
+  --orange:#ff8c42;
+}
+html{scroll-behavior:smooth}
+body{background:var(--ink);color:var(--white);font-family:'Segoe UI',system-ui,-apple-system,sans-serif;font-size:16px;line-height:1.6;overflow-x:hidden}
+::selection{background:rgba(0,212,255,0.25)}
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:var(--ink)}
+::-webkit-scrollbar-thumb{background:rgba(0,212,255,0.4);border-radius:3px}
+
+/* TYPOGRAPHY */
+h1{font-size:clamp(2.8rem,6.5vw,5.6rem);font-weight:800;line-height:1.06;letter-spacing:-0.03em}
+h2{font-size:clamp(2rem,4vw,3.4rem);font-weight:700;line-height:1.1;letter-spacing:-0.025em}
+h3{font-size:clamp(1.1rem,2vw,1.35rem);font-weight:600;line-height:1.3}
+p{line-height:1.75}
+
+/* NAV */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 2.5rem;height:64px;
+  background:rgba(6,16,30,0.88);
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--border-d);
+}
+.logo{font-size:1rem;font-weight:800;letter-spacing:0.07em;text-transform:uppercase;color:var(--cyan);text-decoration:none}
+.nav-links{display:flex;gap:2.2rem;list-style:none}
+.nav-links a{color:rgba(255,255,255,0.55);text-decoration:none;font-size:0.8rem;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;transition:color 0.2s}
+.nav-links a:hover{color:var(--white)}
+.nav-btn{background:var(--cyan);color:var(--ink);padding:0.45rem 1.2rem;border-radius:4px;font-weight:700;font-size:0.78rem;text-decoration:none;letter-spacing:0.05em;text-transform:uppercase;transition:opacity 0.2s}
+.nav-btn:hover{opacity:0.82}
+
+/* LAYOUT */
+section{position:relative}
+.wrap{max-width:1140px;margin:0 auto;padding:0 2rem}
+
+/* SCROLL ANIMATIONS */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity 0.75s ease,transform 0.75s ease}
+.reveal.up{opacity:1;transform:none}
+.reveal-l{opacity:0;transform:translateX(-28px);transition:opacity 0.75s ease,transform 0.75s ease}
+.reveal-l.up{opacity:1;transform:none}
+.reveal-r{opacity:0;transform:translateX(28px);transition:opacity 0.75s ease,transform 0.75s ease}
+.reveal-r.up{opacity:1;transform:none}
+.reveal-s{opacity:0;transition:opacity 0.7s ease}
+.reveal-s.up{opacity:1}
+
+/* LABEL */
+.eyebrow{display:inline-block;font-size:0.7rem;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:var(--cyan);margin-bottom:1.1rem}
+.eyebrow-dark{color:var(--ink2);opacity:0.5}
+
+/* HERO ──────────────────────────────────── */
+#hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;overflow:hidden;padding-top:64px}
+#hero-canvas{position:absolute;inset:0;z-index:0}
+.hero-inner{position:relative;z-index:1;padding:5rem 2rem 4rem;max-width:1140px;margin:0 auto;width:100%}
+.hero-tag{
+  display:inline-flex;align-items:center;gap:0.5rem;
+  background:rgba(0,212,255,0.08);border:1px solid var(--border-d);
+  border-radius:20px;padding:0.3rem 1rem;font-size:0.72rem;
+  color:var(--cyan);margin-bottom:2.5rem;letter-spacing:0.1em;text-transform:uppercase;font-weight:600
+}
+.hero-tag .blink{width:6px;height:6px;border-radius:50%;background:var(--cyan);animation:blink 2s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.2}}
+.hero-title{margin-bottom:2rem;max-width:820px}
+.hero-title em{font-style:normal;background:linear-gradient(100deg,var(--cyan),var(--mint));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:clamp(1rem,1.8vw,1.18rem);color:rgba(255,255,255,0.55);max-width:540px;margin-bottom:3rem}
+.hero-ctas{display:flex;gap:1rem;flex-wrap:wrap}
+.btn-p{background:linear-gradient(120deg,var(--cyan),var(--teal));color:var(--ink);padding:0.9rem 2.2rem;border-radius:5px;font-weight:800;font-size:0.88rem;text-decoration:none;letter-spacing:0.03em;transition:transform 0.2s,box-shadow 0.2s;box-shadow:0 0 30px rgba(0,212,255,0.3)}
+.btn-p:hover{transform:translateY(-2px);box-shadow:0 0 50px rgba(0,212,255,0.5)}
+.btn-o{border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.7);padding:0.9rem 2.2rem;border-radius:5px;font-weight:600;font-size:0.88rem;text-decoration:none;transition:border-color 0.2s,color 0.2s}
+.btn-o:hover{border-color:var(--cyan);color:var(--white)}
+.scroll-down{position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);z-index:1;display:flex;flex-direction:column;align-items:center;gap:0.5rem;color:rgba(255,255,255,0.3);font-size:0.65rem;letter-spacing:0.12em;text-transform:uppercase;animation:float 2.5s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(8px)}}
+
+/* MISSION / STATS ──────────────────────── */
+#mission{background:var(--fog2);padding:7rem 2rem;color:var(--ink)}
+.mission-grid{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center}
+.mission-text h2{color:var(--ink)}
+.mission-text p{color:var(--muted);margin-top:1.2rem;font-size:1.02rem}
+.stats-col{display:flex;flex-direction:column;gap:2rem}
+.stat-block{padding:1.8rem 2rem;border:1px solid var(--border-l);border-radius:10px;background:var(--white);box-shadow:0 2px 20px rgba(10,22,40,0.06)}
+.stat-num{font-size:3.4rem;font-weight:800;line-height:1;letter-spacing:-0.04em;color:var(--ink);display:flex;align-items:baseline;gap:0.04em}
+.stat-num .u{font-size:1.5rem;font-weight:700;letter-spacing:-0.01em;opacity:0.75}
+.stat-label{font-size:0.82rem;color:var(--muted);margin-top:0.4rem;line-height:1.4}
+.stat-block.accent .stat-num{background:linear-gradient(120deg,var(--cyan),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
+/* TEAM */
+#team{background:var(--ink2);padding:7rem 2rem}
+#team h2{text-align:center;margin-bottom:0.8rem}
+#team>.wrap>.sub{text-align:center;color:rgba(255,255,255,0.4);margin-bottom:4rem;max-width:480px;margin-left:auto;margin-right:auto}
+.team-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem}
+.team-card{background:rgba(255,255,255,0.03);border:1px solid var(--border-d);border-radius:14px;overflow:hidden;transition:transform 0.25s,box-shadow 0.25s}
+.team-card:hover{transform:translateY(-5px);box-shadow:0 16px 50px rgba(0,212,255,0.1)}
+.team-photo-wrap{width:100%;aspect-ratio:1;overflow:hidden;background:var(--ink);position:relative}
+.team-photo-wrap img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block;filter:grayscale(15%)}
+.team-initials{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:2.5rem;font-weight:800;color:rgba(0,212,255,0.3);background:rgba(6,16,30,0.6);letter-spacing:0.04em;font-style:italic}
+.team-body{padding:1.4rem 1.4rem 1.6rem}
+.team-name{font-size:1rem;font-weight:700;color:var(--white);margin-bottom:0.2rem}
+.team-role{font-size:0.72rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--cyan);margin-bottom:0.7rem}
+.team-bio{font-size:0.8rem;color:rgba(255,255,255,0.38);line-height:1.65}
+@media(max-width:900px){.team-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:500px){.team-grid{grid-template-columns:1fr}}
+
+/* DIAGRAM: INSPECTION ──────────────────── */
+#diagram{background:var(--ink);padding:7rem 2rem}
+.diagram-hd{text-align:center;margin-bottom:4rem}
+.diagram-hd h2{max-width:680px;margin:0 auto}
+.diagram-hd p{color:rgba(255,255,255,0.45);margin-top:1rem;max-width:520px;margin-left:auto;margin-right:auto}
+.diagram-wrap{max-width:1000px;margin:0 auto;background:rgba(10,22,40,0.6);border:1px solid var(--border-d);border-radius:16px;overflow:hidden;position:relative}
+.diagram-wrap svg{display:block;width:100%;height:auto}
+
+/* HOW IT WORKS ─────────────────────────── */
+#how{background:var(--fog2);padding:7rem 2rem;color:var(--ink)}
+.how-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:start;margin-top:3.5rem}
+.step-list{display:flex;flex-direction:column;gap:0}
+.step-row{display:flex;gap:1.5rem;padding:1.8rem 0;border-bottom:1px solid var(--border-l);align-items:flex-start;opacity:0;transform:translateX(-20px);transition:opacity 0.5s ease,transform 0.5s ease}
+.step-row:first-child{padding-top:0}
+.step-row:last-child{border-bottom:none}
+.step-row.show{opacity:1;transform:none}
+.step-n{flex-shrink:0;width:2.4rem;height:2.4rem;border-radius:50%;background:var(--ink);color:var(--cyan);display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:800;letter-spacing:0.04em}
+.step-text h3{font-size:1rem;color:var(--ink);margin-bottom:0.3rem}
+.step-text p{font-size:0.85rem;color:var(--muted)}
+.drone-diagram{position:sticky;top:120px;background:var(--ink);border-radius:14px;overflow:hidden;border:1px solid rgba(0,212,255,0.12)}
+.drone-diagram svg{display:block;width:100%;height:auto}
+
+/* IMPACT ───────────────────────────────── */
+#impact{background:var(--ink);padding:7rem 2rem}
+.impact-header{text-align:center;margin-bottom:4rem}
+.impact-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;border:1px solid var(--border-d);border-radius:14px;overflow:hidden}
+.impact-cell{padding:3.5rem 3rem;background:var(--ink2)}
+.impact-cell h3{font-size:0.7rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--cyan);margin-bottom:1.2rem}
+.impact-big{font-size:clamp(3rem,7vw,5.5rem);font-weight:800;line-height:1;letter-spacing:-0.04em;margin-bottom:0.6rem}
+.impact-cell p{color:rgba(255,255,255,0.45);font-size:0.9rem;line-height:1.7}
+.cost-before-after{display:flex;align-items:center;gap:1rem;margin-bottom:1rem;flex-wrap:wrap}
+.cost-amt{font-size:2rem;font-weight:800;letter-spacing:-0.03em}
+.cost-amt.old{color:rgba(255,77,109,0.7);text-decoration:line-through}
+.cost-amt.new{color:var(--cyan)}
+.arrow-between{color:rgba(255,255,255,0.2);font-size:1.5rem}
+.cost-note{font-size:0.78rem;color:rgba(255,255,255,0.3);letter-spacing:0.04em;text-transform:uppercase}
+
+/* CO2 ───────────────────────────────────── */
+#co2{background:var(--fog2);padding:7rem 2rem;color:var(--ink)}
+.co2-grid{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;margin-top:3rem}
+.co2-text p{color:var(--muted);margin-top:1rem;font-size:1rem;line-height:1.8}
+.co2-points{display:flex;flex-direction:column;gap:1.2rem;margin-top:2rem}
+.co2-pt{display:flex;align-items:flex-start;gap:1rem;padding:1.2rem 1.4rem;border:1px solid var(--border-l);border-radius:8px;background:var(--white)}
+.co2-icon{flex-shrink:0;width:2.2rem;height:2.2rem;border-radius:6px;background:rgba(0,184,169,0.12);display:flex;align-items:center;justify-content:center}
+.co2-pt-text h4{font-size:0.88rem;font-weight:700;color:var(--ink);margin-bottom:0.2rem}
+.co2-pt-text p{font-size:0.8rem;color:var(--muted);line-height:1.5}
+.co2-diagram{background:var(--ink);border-radius:14px;overflow:hidden;border:1px solid rgba(0,212,255,0.1)}
+.co2-diagram svg{display:block;width:100%;height:auto}
+
+/* CTA / CONTACT ────────────────────────── */
+#contact{background:var(--ink2);padding:8rem 2rem;text-align:center;position:relative;overflow:hidden}
+#contact::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(0,212,255,0.08),transparent 70%);pointer-events:none}
+.contact-inner{position:relative;z-index:1;max-width:640px;margin:0 auto}
+.contact-inner h2{margin-bottom:1rem}
+.contact-inner p{color:rgba(255,255,255,0.45);margin-bottom:2.5rem}
+.email-link{display:inline-flex;align-items:center;gap:0.6rem;font-size:1.1rem;font-weight:600;color:var(--cyan);text-decoration:none;border:1px solid var(--border-d);padding:1rem 2rem;border-radius:8px;background:rgba(0,212,255,0.05);transition:background 0.2s,box-shadow 0.2s}
+.email-link:hover{background:rgba(0,212,255,0.1);box-shadow:0 0 30px rgba(0,212,255,0.2)}
+.contact-meta{font-size:0.78rem;color:rgba(255,255,255,0.25);margin-top:2rem;letter-spacing:0.04em}
+
+/* FOOTER */
+footer{background:var(--ink);border-top:1px solid var(--border-d);padding:1.5rem 2rem;text-align:center;font-size:0.75rem;color:rgba(255,255,255,0.2)}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .mission-grid,.how-grid,.co2-grid,.impact-grid{grid-template-columns:1fr}
+  .drone-diagram{position:relative;top:0}
+  .impact-cell{padding:2.5rem 1.8rem}
+}
+@media(max-width:640px){
+  nav{padding:0 1rem}
+  .nav-links{display:none}
+  h1{font-size:2.2rem}
+  .impact-big{font-size:3.5rem}
+}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.01ms!important;transition-duration:0.01ms!important}}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="logo" href="#hero">Sunken Robotics</a>
+  <ul class="nav-links">
+    <li><a href="#mission">Mission</a></li>
+    <li><a href="#how">Technology</a></li>
+    <li><a href="#impact">Impact</a></li>
+    <li><a href="#co2">Sustainability</a></li>
+    <li><a href="#team">Team</a></li>
+  </ul>
+  <a class="nav-btn" href="#contact">Contact</a>
+</nav>
+
+<!-- ═══════════════════════════════════ HERO -->
+<section id="hero">
+  <canvas id="hero-canvas"></canvas>
+  <div class="hero-inner">
+    <div class="hero-tag"><span class="blink"></span>Seed Round — Eindhoven, April 2026</div>
+    <h1 class="hero-title reveal">
+      We inspect what<br>
+      <em>ships can't reach.</em>
+    </h1>
+    <p class="hero-sub reveal" style="transition-delay:0.1s">Autonomous underwater drones, permanently docked inside offshore wind farms — continuously monitoring foundations so fleets of inspection vessels don't have to.</p>
+    <div class="hero-ctas reveal" style="transition-delay:0.2s">
+      <a class="btn-p" href="#how">See How It Works</a>
+      <a class="btn-o" href="#contact">Talk to Us</a>
+    </div>
+  </div>
+  <div class="scroll-down">
+    <svg width="18" height="28" viewBox="0 0 18 28" fill="none">
+      <rect x="1" y="1" width="16" height="26" rx="8" stroke="currentColor" stroke-width="1.2"/>
+      <rect x="8" y="6" width="2" height="6" rx="1" fill="currentColor"><animate attributeName="y" values="6;14;6" dur="2s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0;1" dur="2s" repeatCount="indefinite"/></rect>
+    </svg>
+    Scroll
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════ MISSION -->
+<section id="mission">
+  <div class="wrap">
+    <div class="mission-grid">
+      <div class="mission-text reveal-l">
+        <span class="eyebrow eyebrow-dark">Our Mission</span>
+        <h2>Replace the inspection vessel.<br>Permanently.</h2>
+        <p>Offshore wind farms are entering a critical phase — turbines approaching 25-year design lives, with foundations corroding silently under the waterline. The current solution is expensive, infrequent, and carbon-heavy. We built a better one.</p>
+        <p style="margin-top:1rem">Sunken Robotics deploys AI-powered autonomous drones that live inside wind farms — docked on the turbine structure itself, charged from the turbine grid, and continuously collecting the structural data operators need to make confident, defensible decisions.</p>
+      </div>
+      <div class="stats-col reveal-r">
+        <div class="stat-block reveal" style="transition-delay:0.0s">
+          <div class="stat-num"><span class="u">€</span>539<span class="u">k</span></div>
+          <div class="stat-label">Typical cost of a single vessel-based inspection campaign across 5 turbines today</div>
+        </div>
+        <div class="stat-block accent reveal" style="transition-delay:0.12s">
+          <div class="stat-num">70<span class="u">%</span></div>
+          <div class="stat-label">Cost reduction with a single Sunken Robotics drone — covering the same 5 turbines</div>
+        </div>
+        <div class="stat-block reveal" style="transition-delay:0.24s">
+          <div class="stat-num">83<span class="u">GW</span></div>
+          <div class="stat-label">Offshore wind installed globally — and growing at 27% CAGR, every turbine a future inspection contract</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════ MAIN DIAGRAM -->
+<section id="diagram">
+  <div class="wrap">
+    <div class="diagram-hd reveal">
+      <span class="eyebrow">How We See It</span>
+      <h2>A permanent eye on your foundations</h2>
+      <p>The drone docks inside the turbine structure — always there, always ready. No vessel. No weather delays. No carbon.</p>
+    </div>
+    <div class="diagram-wrap reveal" style="transition-delay:0.15s">
+      <!-- TURBINE + UNDERWATER INSPECTION DIAGRAM -->
+      <svg viewBox="0 0 1000 560" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#06101e"/>
+            <stop offset="100%" stop-color="#0d2137"/>
+          </linearGradient>
+          <linearGradient id="seaGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#062a40"/>
+            <stop offset="100%" stop-color="#021520"/>
+          </linearGradient>
+          <linearGradient id="stressGrad" x1="0" y1="1" x2="0" y2="0">
+            <stop offset="0%" stop-color="#0010ff"/>
+            <stop offset="40%" stop-color="#00aaff"/>
+            <stop offset="75%" stop-color="#00ffc3"/>
+            <stop offset="90%" stop-color="#ffaa00"/>
+            <stop offset="100%" stop-color="#ff4400"/>
+          </linearGradient>
+          <linearGradient id="towerGrad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#1a3a55"/>
+            <stop offset="50%" stop-color="#2a5572"/>
+            <stop offset="100%" stop-color="#1a3a55"/>
+          </linearGradient>
+          <filter id="glow">
+            <feGaussianBlur stdDeviation="3" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+          <filter id="glow2">
+            <feGaussianBlur stdDeviation="6" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+          <pattern id="gridP" width="40" height="40" patternUnits="userSpaceOnUse">
+            <path d="M40 0L0 0 0 40" fill="none" stroke="rgba(0,212,255,0.07)" stroke-width="0.7"/>
+          </pattern>
+          <clipPath id="seaClip">
+            <rect x="0" y="230" width="1000" height="330"/>
+          </clipPath>
+          <radialGradient id="droneGlow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#00d4ff" stop-opacity="0.5"/>
+            <stop offset="100%" stop-color="#00d4ff" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+
+        <!-- Sky -->
+        <rect width="1000" height="560" fill="url(#skyGrad)"/>
+        <!-- Grid overlay -->
+        <rect width="1000" height="560" fill="url(#gridP)" opacity="0.6"/>
+
+        <!-- Perspective grid lines -->
+        <g stroke="rgba(0,212,255,0.08)" stroke-width="0.8">
+          <line x1="500" y1="280" x2="0" y2="560"/>
+          <line x1="500" y1="280" x2="1000" y2="560"/>
+          <line x1="500" y1="280" x2="0" y2="280"/>
+          <line x1="500" y1="280" x2="1000" y2="280"/>
+          <line x1="500" y1="280" x2="150" y2="490"/>
+          <line x1="500" y1="280" x2="850" y2="490"/>
+          <line x1="500" y1="280" x2="250" y2="560"/>
+          <line x1="500" y1="280" x2="750" y2="560"/>
+        </g>
+
+        <!-- Horizon line / Water surface -->
+        <rect x="0" y="240" width="1000" height="320" fill="url(#seaGrad)"/>
+        <!-- Wave effect -->
+        <path d="M0,242 Q125,236 250,242 Q375,248 500,242 Q625,236 750,242 Q875,248 1000,242 L1000,240 L0,240 Z" fill="#062a40" opacity="0.8"/>
+        <path d="M0,244 Q100,240 200,244 Q300,248 400,244 Q500,240 600,244 Q700,248 800,244 Q900,240 1000,244" fill="none" stroke="rgba(0,212,255,0.3)" stroke-width="1"/>
+        <!-- Sea surface shimmer -->
+        <path d="M50,241 Q80,239 110,241" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
+        <path d="M300,243 Q340,241 380,243" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+        <path d="M700,241 Q740,239 770,241" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="1.5"/>
+
+        <!-- TURBINE TOWER (above water) -->
+        <polygon points="478,40 522,40 514,240 486,240" fill="url(#towerGrad)" stroke="rgba(0,212,255,0.2)" stroke-width="0.5"/>
+        <!-- Tower highlight -->
+        <polygon points="499,40 502,40 502,240 499,240" fill="rgba(255,255,255,0.06)"/>
+
+        <!-- NACELLE -->
+        <rect x="468" y="32" width="64" height="22" rx="6" fill="#1e4060" stroke="rgba(0,212,255,0.3)" stroke-width="0.8"/>
+        <rect x="530" y="39" width="18" height="8" rx="2" fill="#1e4060"/>
+
+        <!-- BLADES -->
+        <!-- Blade 1 - upper left -->
+        <path d="M492,36 C480,20 440,5 400,8 C440,12 475,25 490,38 Z" fill="#c8d8e8" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/>
+        <!-- Blade 2 - upper right -->
+        <path d="M508,36 C520,20 560,5 600,8 C560,12 525,25 510,38 Z" fill="#d0dde8" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/>
+        <!-- Blade 3 - down -->
+        <path d="M500,44 C500,60 498,105 490,145 C494,105 498,62 500,46 Z" fill="#b8ccd8" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/>
+        <!-- Hub -->
+        <circle cx="500" cy="40" r="8" fill="#2a4a65" stroke="rgba(0,212,255,0.4)" stroke-width="1"/>
+
+        <!-- MONOPILE below water — with structural stress coloring -->
+        <rect x="480" y="240" width="40" height="230" fill="url(#stressGrad)" opacity="0.85" rx="2"/>
+        <!-- Monopile outline -->
+        <rect x="480" y="240" width="40" height="230" fill="none" stroke="rgba(0,212,255,0.25)" stroke-width="0.8" rx="2"/>
+        <!-- Monopile highlight -->
+        <rect x="480" y="240" width="6" height="230" fill="rgba(255,255,255,0.04)" rx="2"/>
+
+        <!-- Foundation base -->
+        <polygon points="450,460 550,460 560,470 440,470" fill="#0a1e30" stroke="rgba(0,212,255,0.2)" stroke-width="0.8"/>
+        <rect x="440" y="470" width="120" height="12" rx="2" fill="#081828" stroke="rgba(0,212,255,0.15)" stroke-width="0.6"/>
+
+        <!-- Seabed -->
+        <rect x="0" y="482" width="1000" height="78" fill="#030d18"/>
+        <path d="M0,482 Q200,478 400,482 Q600,486 800,482 Q900,480 1000,482" fill="none" stroke="rgba(0,212,255,0.1)" stroke-width="1"/>
+        <!-- Seabed texture -->
+        <path d="M0,488 Q50,486 100,488 Q150,490 200,488" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+        <path d="M700,486 Q770,484 840,486 Q910,488 980,486" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+
+        <!-- Marine growth on base -->
+        <g opacity="0.6">
+          <path d="M446,468 Q444,458 447,452" fill="none" stroke="#00b8a9" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M452,470 Q449,462 453,456" fill="none" stroke="#00b8a9" stroke-width="1.2" stroke-linecap="round"/>
+          <path d="M554,468 Q556,458 553,452" fill="none" stroke="#00b8a9" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M548,470 Q551,462 547,456" fill="none" stroke="#00b8a9" stroke-width="1.2" stroke-linecap="round"/>
+        </g>
+
+        <!-- DRONE with glowing orbit -->
+        <!-- Orbit path (ellipse around monopile) -->
+        <ellipse cx="500" cy="380" rx="80" ry="28" fill="none" stroke="rgba(0,212,255,0.18)" stroke-width="1" stroke-dasharray="5,4"/>
+        <!-- Orbit glow -->
+        <ellipse cx="500" cy="380" rx="80" ry="28" fill="none" stroke="rgba(0,212,255,0.08)" stroke-width="4"/>
+
+        <!-- Drone body -->
+        <g id="drone" filter="url(#glow)">
+          <!-- Drone at 9 o'clock position on orbit -->
+          <ellipse cx="420" cy="380" rx="22" ry="10" fill="url(#droneGlow)" opacity="0.7"/>
+          <rect x="412" y="375" width="16" height="10" rx="3" fill="#00d4ff" opacity="0.9"/>
+          <!-- Thrusters -->
+          <circle cx="411" cy="376" r="3" fill="#005580" stroke="#00d4ff" stroke-width="0.8"/>
+          <circle cx="429" cy="376" r="3" fill="#005580" stroke="#00d4ff" stroke-width="0.8"/>
+          <circle cx="411" cy="384" r="3" fill="#005580" stroke="#00d4ff" stroke-width="0.8"/>
+          <circle cx="429" cy="384" r="3" fill="#005580" stroke="#00d4ff" stroke-width="0.8"/>
+          <!-- Camera lens -->
+          <circle cx="420" cy="380" r="2.5" fill="#00ffcc"/>
+          <!-- Thruster wash -->
+          <line x1="406" y1="376" x2="402" y2="374" stroke="rgba(0,212,255,0.5)" stroke-width="1"/>
+          <line x1="406" y1="384" x2="402" y2="386" stroke="rgba(0,212,255,0.5)" stroke-width="1"/>
+          <!-- Drone label -->
+          <rect x="392" y="362" width="56" height="10" rx="2" fill="rgba(0,212,255,0.12)" stroke="rgba(0,212,255,0.3)" stroke-width="0.5"/>
+          <text x="420" y="370" text-anchor="middle" fill="#00d4ff" font-size="6.5" font-family="monospace" letter-spacing="0.05em">SR-DRONE v1</text>
+        </g>
+
+        <!-- Data connection line: drone to cloud/HQ -->
+        <path d="M420,375 Q380,340 320,300 Q280,275 240,265" fill="none" stroke="rgba(0,212,255,0.4)" stroke-width="1" stroke-dasharray="4,3"/>
+        <!-- Small data nodes along line -->
+        <circle cx="370" cy="337" r="2" fill="#00d4ff" opacity="0.6"/>
+        <circle cx="305" cy="294" r="2" fill="#00d4ff" opacity="0.4"/>
+
+        <!-- STRESS LEGEND (like the IoT platform screenshots) -->
+        <rect x="30" y="270" width="90" height="170" rx="6" fill="rgba(6,16,30,0.85)" stroke="rgba(0,212,255,0.2)" stroke-width="0.8"/>
+        <text x="75" y="288" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-size="8" font-family="monospace">Von Mises [N]</text>
+        <!-- Gradient bar -->
+        <defs>
+          <linearGradient id="legendGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#ff4400"/>
+            <stop offset="40%" stop-color="#ffaa00"/>
+            <stop offset="70%" stop-color="#00ffc3"/>
+            <stop offset="90%" stop-color="#00aaff"/>
+            <stop offset="100%" stop-color="#0010ff"/>
+          </linearGradient>
+        </defs>
+        <rect x="44" y="295" width="18" height="120" rx="2" fill="url(#legendGrad)"/>
+        <!-- Legend ticks -->
+        <text x="68" y="300" fill="rgba(255,255,255,0.5)" font-size="7" font-family="monospace">3.2e6</text>
+        <text x="68" y="325" fill="rgba(255,255,255,0.5)" font-size="7" font-family="monospace">2.4e6</text>
+        <text x="68" y="350" fill="rgba(255,255,255,0.5)" font-size="7" font-family="monospace">1.6e6</text>
+        <text x="68" y="375" fill="rgba(255,255,255,0.5)" font-size="7" font-family="monospace">0.8e6</text>
+        <text x="68" y="415" fill="rgba(255,255,255,0.5)" font-size="7" font-family="monospace">0.0e2</text>
+        <!-- Defect dot highlighted on monopile -->
+        <circle cx="485" cy="350" r="4" fill="#ff4400" filter="url(#glow2)" opacity="0.9"/>
+        <circle cx="515" cy="390" r="3" fill="#ffaa00" filter="url(#glow)" opacity="0.8"/>
+        <!-- Annotation lines from defects -->
+        <line x1="481" y1="350" x2="465" y2="340" stroke="rgba(255,68,0,0.6)" stroke-width="0.8"/>
+        <rect x="440" y="333" width="24" height="10" rx="2" fill="rgba(255,68,0,0.15)" stroke="rgba(255,68,0,0.4)" stroke-width="0.5"/>
+        <text x="452" y="340" text-anchor="middle" fill="#ff4d00" font-size="6.5" font-family="monospace">CRACK</text>
+
+        <!-- DATA READOUT panel top right -->
+        <rect x="760" y="260" width="210" height="145" rx="8" fill="rgba(6,16,30,0.88)" stroke="rgba(0,212,255,0.2)" stroke-width="0.8"/>
+        <text x="775" y="280" fill="#00d4ff" font-size="8" font-family="monospace" font-weight="bold" letter-spacing="0.08em">STRUCTURAL HEALTH MONITOR</text>
+        <line x1="760" y1="286" x2="970" y2="286" stroke="rgba(0,212,255,0.15)" stroke-width="0.6"/>
+        <!-- Readings -->
+        <g font-family="monospace" font-size="8">
+          <text x="775" y="302" fill="rgba(255,255,255,0.4)">Wall Thickness</text>
+          <text x="940" y="302" text-anchor="end" fill="#00ffc3">18.2 mm</text>
+          <text x="775" y="318" fill="rgba(255,255,255,0.4)">Corrosion Rate</text>
+          <text x="940" y="318" text-anchor="end" fill="#ffaa00">0.12 mm/yr</text>
+          <text x="775" y="334" fill="rgba(255,255,255,0.4)">CP Potential</text>
+          <text x="940" y="334" text-anchor="end" fill="#00d4ff">-1.04 V</text>
+          <text x="775" y="350" fill="rgba(255,255,255,0.4)">Scour Depth</text>
+          <text x="940" y="350" text-anchor="end" fill="#00ffc3">0.3 m</text>
+          <text x="775" y="366" fill="rgba(255,255,255,0.4)">Defects Found</text>
+          <text x="940" y="366" text-anchor="end" fill="#ff4d6d">2 FLAGGED</text>
+        </g>
+        <line x1="760" y1="374" x2="970" y2="374" stroke="rgba(0,212,255,0.1)" stroke-width="0.5"/>
+        <text x="775" y="388" fill="rgba(0,212,255,0.5)" font-size="7" font-family="monospace">LAST SCAN: 4h 12m ago · AUTO-UPLOADING</text>
+        <!-- Blinking dot -->
+        <circle cx="762" cy="385" r="3" fill="#00d4ff">
+          <animate attributeName="opacity" values="1;0.2;1" dur="2s" repeatCount="indefinite"/>
+        </circle>
+
+        <!-- Depth labels -->
+        <line x1="555" y1="240" x2="555" y2="470" stroke="rgba(0,212,255,0.12)" stroke-width="0.8" stroke-dasharray="4,3"/>
+        <line x1="550" y1="240" x2="560" y2="240" stroke="rgba(0,212,255,0.3)" stroke-width="1"/>
+        <line x1="550" y1="470" x2="560" y2="470" stroke="rgba(0,212,255,0.3)" stroke-width="1"/>
+        <text x="565" y="244" fill="rgba(255,255,255,0.35)" font-size="8" font-family="monospace">0m</text>
+        <text x="565" y="380" fill="rgba(255,255,255,0.35)" font-size="8" font-family="monospace">~25m</text>
+        <text x="565" y="474" fill="rgba(255,255,255,0.35)" font-size="8" font-family="monospace">~35m</text>
+        <!-- Arrow -->
+        <text x="558" y="356" fill="rgba(0,212,255,0.4)" font-size="10">↓</text>
+
+        <!-- DOCKING STATION label on turbine -->
+        <rect x="522" y="248" width="90" height="20" rx="3" fill="rgba(0,212,255,0.08)" stroke="rgba(0,212,255,0.25)" stroke-width="0.6"/>
+        <text x="567" y="261" text-anchor="middle" fill="rgba(0,212,255,0.8)" font-size="7.5" font-family="monospace">DOCKING STATION</text>
+        <line x1="522" y1="258" x2="514" y2="258" stroke="rgba(0,212,255,0.3)" stroke-width="0.7"/>
+        <!-- Small dock indicator on tower -->
+        <rect x="510" y="253" width="5" height="10" rx="1" fill="#00d4ff" opacity="0.7">
+          <animate attributeName="opacity" values="0.7;0.3;0.7" dur="3s" repeatCount="indefinite"/>
+        </rect>
+
+        <!-- AI REPORT overlay bottom -->
+        <rect x="620" y="430" width="200" height="50" rx="6" fill="rgba(6,16,30,0.88)" stroke="rgba(0,184,169,0.3)" stroke-width="0.7"/>
+        <text x="635" y="448" fill="#00b8a9" font-size="7.5" font-family="monospace" font-weight="bold">AI REPORT GENERATED</text>
+        <text x="635" y="462" fill="rgba(255,255,255,0.35)" font-size="7" font-family="monospace">Priority: HIGH · 2 items require action</text>
+        <text x="635" y="474" fill="rgba(255,255,255,0.25)" font-size="6.5" font-family="monospace">Sent to onshore HQ · 06:42 UTC</text>
+
+        <!-- Animation: drone orbiting -->
+        <animateTransform xlink:href="#drone" attributeName="transform" type="rotate" from="0 500 380" to="360 500 380" dur="12s" repeatCount="indefinite"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════ HOW IT WORKS -->
+<section id="how">
+  <div class="wrap">
+    <span class="eyebrow eyebrow-dark reveal">Technology</span>
+    <h2 class="reveal" style="color:var(--ink)">Five steps.<br>No vessel required.</h2>
+    <div class="how-grid">
+      <div class="step-list" id="step-list">
+        <div class="step-row">
+          <div class="step-n">01</div>
+          <div class="step-text">
+            <h3>Deploy from the turbine</h3>
+            <p>The drone launches from a docking station fixed to the turbine's J-tube or transition piece. It charges directly from the turbine's own power grid — no support vessel, no crew, no weather dependency.</p>
+          </div>
+        </div>
+        <div class="step-row">
+          <div class="step-n">02</div>
+          <div class="step-text">
+            <h3>Navigate autonomously</h3>
+            <p>Onboard SLAM navigation guides the drone between monopiles, covering up to 5 turbines per operational cycle with no remote pilot.</p>
+          </div>
+        </div>
+        <div class="step-row">
+          <div class="step-n">03</div>
+          <div class="step-text">
+            <h3>Capture everything</h3>
+            <p>4K video, ultrasonic wall-thickness readings, and cathodic protection potential measurements — the full structural picture, every time.</p>
+          </div>
+        </div>
+        <div class="step-row">
+          <div class="step-n">04</div>
+          <div class="step-text">
+            <h3>Upload automatically</h3>
+            <p>On return to dock, the full data package auto-uploads to the onshore AI pipeline via the turbine's communications link. Zero manual handling.</p>
+          </div>
+        </div>
+        <div class="step-row">
+          <div class="step-n">05</div>
+          <div class="step-text">
+            <h3>Act on AI-prioritised reports</h3>
+            <p>The AI engine flags cracks, corrosion risk, biofouling, and scour — ranked by urgency. Engineers get actionable recommendations, not raw video files.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- DRONE RANGE DIAGRAM -->
+      <div class="drone-diagram reveal-r">
+        <svg viewBox="0 0 460 520" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="oceanBg" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#041420"/>
+              <stop offset="100%" stop-color="#062030"/>
+            </linearGradient>
+            <radialGradient id="droneLight" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#00d4ff" stop-opacity="0.2"/>
+              <stop offset="100%" stop-color="#00d4ff" stop-opacity="0"/>
+            </radialGradient>
+            <filter id="softGlow">
+              <feGaussianBlur stdDeviation="4" result="b"/>
+              <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+            <pattern id="gridSm" width="30" height="30" patternUnits="userSpaceOnUse">
+              <path d="M30 0L0 0 0 30" fill="none" stroke="rgba(0,212,255,0.05)" stroke-width="0.5"/>
+            </pattern>
+          </defs>
+
+          <!-- Background -->
+          <rect width="460" height="520" fill="url(#oceanBg)"/>
+          <rect width="460" height="520" fill="url(#gridSm)"/>
+
+          <!-- Depth indicator (vertical line on right) -->
+          <line x1="410" y1="40" x2="410" y2="480" stroke="rgba(0,212,255,0.25)" stroke-width="1" stroke-dasharray="none"/>
+          <!-- Arrow pointing down -->
+          <path d="M407,50 L410,42 L413,50" fill="rgba(0,212,255,0.5)"/>
+          <text x="422" y="48" fill="#00d4ff" font-size="9" font-family="monospace" font-weight="bold">↓ 50m</text>
+          <text x="422" y="62" fill="rgba(255,255,255,0.4)" font-size="7.5" font-family="monospace">Dive depth</text>
+          <!-- Depth tick marks -->
+          <g stroke="rgba(0,212,255,0.25)" stroke-width="0.7">
+            <line x1="406" y1="100" x2="414" y2="100"/>
+            <line x1="406" y1="200" x2="414" y2="200"/>
+            <line x1="406" y1="300" x2="414" y2="300"/>
+            <line x1="406" y1="400" x2="414" y2="400"/>
+          </g>
+          <text x="390" y="103" text-anchor="end" fill="rgba(255,255,255,0.25)" font-size="7" font-family="monospace">10m</text>
+          <text x="390" y="203" text-anchor="end" fill="rgba(255,255,255,0.25)" font-size="7" font-family="monospace">25m</text>
+          <text x="390" y="303" text-anchor="end" fill="rgba(255,255,255,0.25)" font-size="7" font-family="monospace">40m</text>
+          <text x="390" y="403" text-anchor="end" fill="rgba(255,255,255,0.25)" font-size="7" font-family="monospace">50m</text>
+
+          <!-- TITLE -->
+          <text x="24" y="36" fill="rgba(255,255,255,0.7)" font-size="10" font-family="monospace" font-weight="bold" letter-spacing="0.06em">OPERATIONAL RANGE</text>
+          <line x1="24" y1="42" x2="390" y2="42" stroke="rgba(0,212,255,0.15)" stroke-width="0.6"/>
+
+          <!-- Center point (turbine) -->
+          <line x1="205" y1="56" x2="205" y2="480" stroke="rgba(255,255,255,0.06)" stroke-width="0.8" stroke-dasharray="3,4"/>
+
+          <!-- Turbine icon at top center -->
+          <g transform="translate(205,65)">
+            <rect x="-3" y="0" width="6" height="30" fill="#1a4060"/>
+            <polygon points="0,0 -22,-15 0,-4" fill="#aac4d8"/>
+            <polygon points="0,0 22,-15 0,-4" fill="#c0d4e0"/>
+            <polygon points="0,0 0,18 -3,4" fill="#90b0c8"/>
+            <circle cx="0" cy="0" r="4" fill="#1e4060" stroke="rgba(0,212,255,0.4)" stroke-width="0.8"/>
+          </g>
+
+          <!-- Outer range ring: turbine spacing (~500m in real, scaled here) -->
+          <ellipse cx="205" cy="280" rx="160" ry="60" fill="none" stroke="rgba(0,212,255,0.12)" stroke-width="1" stroke-dasharray="6,5"/>
+          <!-- Inner ring -->
+          <ellipse cx="205" cy="280" rx="90" ry="34" fill="none" stroke="rgba(0,184,169,0.2)" stroke-width="1" stroke-dasharray="4,4"/>
+
+          <!-- Range labels -->
+          <text x="24" y="283" fill="rgba(0,212,255,0.6)" font-size="8.5" font-family="monospace" font-weight="bold">← 500m radius</text>
+          <text x="24" y="294" fill="rgba(255,255,255,0.25)" font-size="7" font-family="monospace">Max inter-turbine coverage</text>
+
+          <text x="115" y="251" fill="rgba(0,184,169,0.7)" font-size="8" font-family="monospace">← 200m</text>
+          <text x="115" y="261" fill="rgba(255,255,255,0.2)" font-size="6.5" font-family="monospace">Primary zone</text>
+
+          <!-- Light rays (like underwater light) -->
+          <g opacity="0.4">
+            <path d="M205,100 L180,480" stroke="rgba(0,212,255,0.04)" stroke-width="12"/>
+            <path d="M205,100 L230,480" stroke="rgba(0,212,255,0.04)" stroke-width="12"/>
+            <path d="M205,100 L205,480" stroke="rgba(0,212,255,0.06)" stroke-width="8"/>
+          </g>
+
+          <!-- DRONE (center, animated scanning) -->
+          <g id="droneMain" filter="url(#softGlow)">
+            <ellipse cx="205" cy="280" rx="35" ry="15" fill="url(#droneLight)"/>
+            <rect x="192" y="273" width="26" height="14" rx="4" fill="#00d4ff" opacity="0.95"/>
+            <!-- Thrusters -->
+            <circle cx="191" cy="274" r="4.5" fill="#003d55" stroke="#00d4ff" stroke-width="1"/>
+            <circle cx="219" cy="274" r="4.5" fill="#003d55" stroke="#00d4ff" stroke-width="1"/>
+            <circle cx="191" cy="286" r="4.5" fill="#003d55" stroke="#00d4ff" stroke-width="1"/>
+            <circle cx="219" cy="286" r="4.5" fill="#003d55" stroke="#00d4ff" stroke-width="1"/>
+            <!-- Propellers -->
+            <circle cx="191" cy="274" r="2.5" fill="#00ffc3"/>
+            <circle cx="219" cy="274" r="2.5" fill="#00ffc3"/>
+            <circle cx="191" cy="286" r="2.5" fill="#00ffc3"/>
+            <circle cx="219" cy="286" r="2.5" fill="#00ffc3"/>
+            <!-- Camera/lens -->
+            <circle cx="205" cy="280" r="3.5" fill="#001520" stroke="#00d4ff" stroke-width="0.8"/>
+            <circle cx="205" cy="280" r="1.5" fill="#00ffcc"/>
+            <!-- Label -->
+            <rect x="185" y="260" width="40" height="9" rx="2" fill="rgba(0,212,255,0.12)" stroke="rgba(0,212,255,0.35)" stroke-width="0.5"/>
+            <text x="205" y="267" text-anchor="middle" fill="#00d4ff" font-size="6" font-family="monospace">SR-DRONE</text>
+          </g>
+
+          <!-- Scanning pulse animation -->
+          <ellipse cx="205" cy="280" rx="0" ry="0" fill="none" stroke="#00d4ff" stroke-width="1.5" opacity="0.7">
+            <animate attributeName="rx" values="0;140;150" dur="3s" repeatCount="indefinite"/>
+            <animate attributeName="ry" values="0;52;56" dur="3s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0.7;0.1;0" dur="3s" repeatCount="indefinite"/>
+          </ellipse>
+          <ellipse cx="205" cy="280" rx="0" ry="0" fill="none" stroke="#00d4ff" stroke-width="1" opacity="0.5">
+            <animate attributeName="rx" values="0;140;150" dur="3s" begin="1.5s" repeatCount="indefinite"/>
+            <animate attributeName="ry" values="0;52;56" dur="3s" begin="1.5s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0.5;0.05;0" dur="3s" begin="1.5s" repeatCount="indefinite"/>
+          </ellipse>
+
+          <!-- Specs panel -->
+          <rect x="24" y="380" width="155" height="100" rx="6" fill="rgba(6,16,30,0.85)" stroke="rgba(0,212,255,0.18)" stroke-width="0.7"/>
+          <text x="36" y="398" fill="#00d4ff" font-size="7.5" font-family="monospace" font-weight="bold" letter-spacing="0.08em">DRONE SPECS</text>
+          <line x1="24" y1="404" x2="179" y2="404" stroke="rgba(0,212,255,0.12)" stroke-width="0.5"/>
+          <g font-family="monospace" font-size="7.5">
+            <text x="36" y="420" fill="rgba(255,255,255,0.4)">Dive depth</text><text x="170" y="420" text-anchor="end" fill="var(--white)">50 m</text>
+            <text x="36" y="434" fill="rgba(255,255,255,0.4)">Coverage</text><text x="170" y="434" text-anchor="end" fill="var(--white)">5 turbines</text>
+            <text x="36" y="448" fill="rgba(255,255,255,0.4)">Powered by</text><text x="170" y="448" text-anchor="end" fill="var(--white)">Turbine grid</text>
+            <text x="36" y="462" fill="rgba(255,255,255,0.4)">Vessel needed</text><text x="170" y="462" text-anchor="end" fill="#00ffc3">None</text>
+          </g>
+
+          <!-- Bubbles -->
+          <g opacity="0.4">
+            <circle cx="170" cy="400" r="2" fill="none" stroke="rgba(0,212,255,0.4)" stroke-width="0.6">
+              <animate attributeName="cy" values="400;80" dur="8s" repeatCount="indefinite"/>
+              <animate attributeName="opacity" values="0.4;0" dur="8s" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="240" cy="420" r="1.5" fill="none" stroke="rgba(0,212,255,0.3)" stroke-width="0.5">
+              <animate attributeName="cy" values="420;100" dur="11s" repeatCount="indefinite"/>
+              <animate attributeName="opacity" values="0.3;0" dur="11s" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="140" cy="360" r="1" fill="none" stroke="rgba(0,212,255,0.25)" stroke-width="0.4">
+              <animate attributeName="cy" values="360;60" dur="9s" repeatCount="indefinite"/>
+              <animate attributeName="opacity" values="0.25;0" dur="9s" repeatCount="indefinite"/>
+            </circle>
+          </g>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════ IMPACT -->
+<section id="impact">
+  <div class="wrap">
+    <div class="impact-header reveal">
+      <span class="eyebrow">Financial Impact</span>
+      <h2>The numbers speak<br>for themselves.</h2>
+    </div>
+    <div class="impact-grid reveal" style="transition-delay:0.15s">
+      <div class="impact-cell">
+        <h3>Cost per campaign · 5 turbines</h3>
+        <div class="cost-before-after">
+          <span class="cost-amt old" id="cOld">€0</span>
+          <span class="arrow-between">→</span>
+          <span class="cost-amt new" id="cNew">€0</span>
+        </div>
+        <div class="cost-note">traditional ROV · sunken robotics</div>
+        <p style="margin-top:1.5rem">75% of the old cost was vessel charter, ROV operations, and offshore labour — before a single reading was taken. We eliminate all three.</p>
+      </div>
+      <div class="impact-cell">
+        <h3>Cost reduction</h3>
+        <div class="impact-big" id="savPct" style="background:linear-gradient(120deg,var(--cyan),var(--mint));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">0%</div>
+        <p>One drone. Five turbines. Five-year operational lifetime. A single capital purchase of €150,000 replaces a recurring inspection spend that exceeds €500k per campaign.</p>
+        <div style="margin-top:1.5rem;padding:1rem 1.2rem;border:1px solid var(--border-d);border-radius:8px;background:rgba(0,212,255,0.04)">
+          <div style="font-size:0.72rem;color:var(--cyan);letter-spacing:0.1em;text-transform:uppercase;font-weight:700;margin-bottom:0.3rem">Market opportunity</div>
+          <div style="font-size:0.9rem">~16,000 turbines globally. Each requiring recurring inspection. This is a multi-billion-euro market, growing at 27% per year.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════ CO2 -->
+<section id="co2">
+  <div class="wrap">
+    <div class="co2-grid">
+      <div class="co2-text reveal-l">
+        <span class="eyebrow eyebrow-dark">Sustainability</span>
+        <h2 style="color:var(--ink)">Offshore wind is green.<br>Its maintenance shouldn't undermine that.</h2>
+        <p>Every traditional inspection campaign dispatches a diesel-powered offshore support vessel. A single vessel campaign releases an estimated 30–60 tonnes of CO₂ — for one wind farm, one visit. With thousands of turbines requiring recurring inspections, the cumulative footprint is significant.</p>
+        <p style="margin-top:1rem">Sunken Robotics is powered by the wind farm itself. Zero vessel fuel. Zero mobilisation emissions. By enabling continuous monitoring, we also prevent premature decommissioning — the highest-carbon outcome of all.</p>
+        <div class="co2-points">
+          <div class="co2-pt">
+            <div class="co2-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00b8a9" stroke-width="2" stroke-linecap="round"><path d="M12 22V12M12 12C12 7 17 4 17 4S12 7 12 12ZM12 12C12 7 7 4 7 4S12 7 12 12Z"/></svg>
+            </div>
+            <div class="co2-pt-text">
+              <h4>Turbine-powered operation</h4>
+              <p>Drone charges from the wind turbine grid — zero fossil fuel consumption during inspection cycles.</p>
+            </div>
+          </div>
+          <div class="co2-pt">
+            <div class="co2-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00b8a9" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M8 12l2 2 4-4"/></svg>
+            </div>
+            <div class="co2-pt-text">
+              <h4>Vessel campaigns eliminated</h4>
+              <p>Estimated 30–60 tCO₂ saved per campaign per wind farm by replacing offshore support vessels.</p>
+            </div>
+          </div>
+          <div class="co2-pt">
+            <div class="co2-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00b8a9" stroke-width="2" stroke-linecap="round"><path d="M3 3l18 18M10 10a2 2 0 102.83 2.83"/></svg>
+            </div>
+            <div class="co2-pt-text">
+              <h4>Lifetime extension enabled</h4>
+              <p>Continuous condition data supports confident life-extension decisions — preventing early decommissioning, the most carbon-intensive outcome.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CO2 DIAGRAM -->
+      <div class="co2-diagram reveal-r">
+        <svg viewBox="0 0 440 500" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="co2Bg" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#041420"/>
+              <stop offset="100%" stop-color="#06101e"/>
+            </linearGradient>
+            <filter id="g3">
+              <feGaussianBlur stdDeviation="5" result="b"/>
+              <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+            <pattern id="dotsP" width="20" height="20" patternUnits="userSpaceOnUse">
+              <circle cx="10" cy="10" r="0.7" fill="rgba(0,212,255,0.08)"/>
+            </pattern>
+          </defs>
+          <rect width="440" height="500" fill="url(#co2Bg)"/>
+          <rect width="440" height="500" fill="url(#dotsP)"/>
+
+          <!-- TITLE -->
+          <text x="220" y="40" text-anchor="middle" fill="rgba(255,255,255,0.65)" font-size="10" font-family="monospace" font-weight="bold" letter-spacing="0.1em">EMISSIONS COMPARISON · PER CAMPAIGN</text>
+          <line x1="30" y1="48" x2="410" y2="48" stroke="rgba(0,212,255,0.12)" stroke-width="0.6"/>
+
+          <!-- BAR CHART: Traditional vs Sunken Robotics -->
+          <!-- X axis -->
+          <line x1="60" y1="380" x2="400" y2="380" stroke="rgba(255,255,255,0.15)" stroke-width="0.8"/>
+          <!-- Y axis -->
+          <line x1="60" y1="100" x2="60" y2="380" stroke="rgba(255,255,255,0.1)" stroke-width="0.8"/>
+
+          <!-- Y axis ticks -->
+          <g font-family="monospace" font-size="8" fill="rgba(255,255,255,0.3)">
+            <text x="50" y="384" text-anchor="end">0</text>
+            <text x="50" y="318" text-anchor="end">20</text>
+            <text x="50" y="253" text-anchor="end">40</text>
+            <text x="50" y="188" text-anchor="end">60</text>
+            <text x="50" y="123" text-anchor="end">80</text>
+          </g>
+          <text x="22" y="250" text-anchor="middle" fill="rgba(255,255,255,0.3)" font-size="8" font-family="monospace" transform="rotate(-90,22,250)">tCO₂ per inspection campaign</text>
+
+          <!-- Y gridlines -->
+          <g stroke="rgba(255,255,255,0.04)" stroke-width="0.6">
+            <line x1="60" y1="315" x2="400" y2="315"/>
+            <line x1="60" y1="250" x2="400" y2="250"/>
+            <line x1="60" y1="185" x2="400" y2="185"/>
+            <line x1="60" y1="120" x2="400" y2="120"/>
+          </g>
+
+          <!-- BAR 1: Traditional ROV (45 tCO2, scaled from 380 to 380-225=155) -->
+          <!-- 80 units = 260px, so 45 = 146px -->
+          <rect x="110" y="234" width="80" height="146" rx="3" fill="rgba(255,77,109,0.15)" stroke="rgba(255,77,109,0.4)" stroke-width="0.8"/>
+          <rect x="110" y="234" width="80" height="146" rx="3" fill="none" class="bar-anim" id="bar1-anim"/>
+          <!-- Bar fill animation element -->
+          <text x="150" y="222" text-anchor="middle" fill="#ff4d6d" font-size="13" font-family="monospace" font-weight="800">~45</text>
+          <text x="150" y="234" text-anchor="middle" fill="rgba(255,77,109,0.6)" font-size="7" font-family="monospace">tCO₂</text>
+          <text x="150" y="400" text-anchor="middle" fill="rgba(255,255,255,0.45)" font-size="8.5" font-family="monospace">Traditional</text>
+          <text x="150" y="413" text-anchor="middle" fill="rgba(255,255,255,0.25)" font-size="7.5" font-family="monospace">ROV campaign</text>
+
+          <!-- Bar fill visual -->
+          <rect x="111" y="235" width="78" height="144" rx="2" fill="rgba(255,77,109,0.18)">
+            <animate attributeName="height" from="0" to="144" dur="1.2s" begin="0.3s" fill="freeze"/>
+            <animate attributeName="y" from="379" to="235" dur="1.2s" begin="0.3s" fill="freeze"/>
+          </rect>
+
+          <!-- Vessel icon above bar -->
+          <g transform="translate(150,190)" opacity="0.7">
+            <path d="M-18,10 L-10,-5 L10,-5 L18,10 Z" fill="rgba(255,77,109,0.3)" stroke="rgba(255,77,109,0.5)" stroke-width="0.8"/>
+            <rect x="-6" y="-12" width="12" height="7" rx="1" fill="rgba(255,77,109,0.25)" stroke="rgba(255,77,109,0.4)" stroke-width="0.6"/>
+            <!-- Smoke puffs -->
+            <circle cx="0" cy="-16" r="3" fill="rgba(100,100,100,0.4)"/>
+            <circle cx="3" cy="-21" r="2.5" fill="rgba(100,100,100,0.25)"/>
+          </g>
+
+          <!-- BAR 2: Sunken Robotics (~0 tCO2) -->
+          <rect x="270" y="376" width="80" height="4" rx="2" fill="rgba(0,212,255,0.4)"/>
+          <!-- Label -->
+          <text x="310" y="364" text-anchor="middle" fill="#00ffc3" font-size="13" font-family="monospace" font-weight="800">≈ 0</text>
+          <text x="310" y="375" text-anchor="middle" fill="rgba(0,255,195,0.5)" font-size="7" font-family="monospace">tCO₂</text>
+          <text x="310" y="400" text-anchor="middle" fill="rgba(255,255,255,0.45)" font-size="8.5" font-family="monospace">Sunken</text>
+          <text x="310" y="413" text-anchor="middle" fill="rgba(255,255,255,0.25)" font-size="7.5" font-family="monospace">Robotics drone</text>
+
+          <!-- Wind + leaf icon above Sunken bar -->
+          <g transform="translate(310,340)" opacity="0.8">
+            <circle cx="0" cy="0" r="14" fill="rgba(0,184,169,0.08)" stroke="rgba(0,184,169,0.25)" stroke-width="0.8"/>
+            <path d="M0,-8 C4,-4 6,0 0,6 C-6,0 -4,-4 0,-8 Z" fill="rgba(0,184,169,0.5)" stroke="rgba(0,184,169,0.7)" stroke-width="0.6"/>
+            <text x="0" y="5" text-anchor="middle" fill="rgba(0,212,255,0.7)" font-size="9">✦</text>
+          </g>
+
+          <!-- Savings callout -->
+          <rect x="80" y="440" width="280" height="42" rx="8" fill="rgba(0,184,169,0.08)" stroke="rgba(0,184,169,0.25)" stroke-width="0.7"/>
+          <text x="220" y="458" text-anchor="middle" fill="#00b8a9" font-size="9.5" font-family="monospace" font-weight="bold">CARBON ELIMINATED PER CAMPAIGN</text>
+          <text x="220" y="474" text-anchor="middle" fill="rgba(255,255,255,0.5)" font-size="9" font-family="monospace">~30–60 tCO₂ · equivalent to 15,000–30,000 km driven</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════ TEAM -->
+<section id="team">
+  <div class="wrap">
+    <span class="eyebrow reveal">The Team</span>
+    <h2 class="reveal">Built by engineers who<br>understand the ocean.</h2>
+    <p class="sub reveal" style="text-align:center;color:rgba(255,255,255,0.4);margin-top:0.8rem;margin-bottom:4rem;max-width:480px;margin-left:auto;margin-right:auto">Six engineering students from Eindhoven University of Technology, combining robotics, AI, and offshore structural expertise.</p>
+    <div class="team-grid">
+
+      <div class="team-card reveal" style="transition-delay:0.0s">
+        <div class="team-photo-wrap">
+          <img src="ivan.jpg" alt="Ivan Bartonicek" onerror="this.style.display='none'">
+          <div class="team-initials">IB</div>
+        </div>
+        <div class="team-body">
+          <div class="team-name">Ivan Bartonicek</div>
+          <div class="team-role">CEO &amp; Business Development</div>
+          <p class="team-bio">Leads market strategy, investor relations, and customer partnerships. Background in energy markets and entrepreneurship, with a focus on scaling deep-tech hardware ventures.</p>
+        </div>
+      </div>
+
+      <div class="team-card reveal" style="transition-delay:0.1s">
+        <div class="team-photo-wrap">
+          <img src="mateo.jpg" alt="Mateo Koch" onerror="this.style.display='none'">
+          <div class="team-initials">MK</div>
+        </div>
+        <div class="team-body">
+          <div class="team-name">Mateo Koch</div>
+          <div class="team-role">CTO &amp; Hardware Lead</div>
+          <p class="team-bio">Designs the drone's hydrodynamic frame, thruster system, and turbine docking station. Specialises in underwater vehicle mechatronics and pressure-rated electronics enclosures.</p>
+        </div>
+      </div>
+
+      <div class="team-card reveal" style="transition-delay:0.2s">
+        <div class="team-photo-wrap">
+          <img src="kaito.jpg" alt="Kaito Puntes" onerror="this.style.display='none'">
+          <div class="team-initials">KP</div>
+        </div>
+        <div class="team-body">
+          <div class="team-name">Kaito Puntes</div>
+          <div class="team-role">AI &amp; Software Lead</div>
+          <p class="team-bio">Builds the autonomous navigation stack and AI defect-detection pipeline. Trained computer vision models on corrosion, crack propagation, and biofouling across monopile imagery datasets.</p>
+        </div>
+      </div>
+
+      <div class="team-card reveal" style="transition-delay:0.3s">
+        <div class="team-photo-wrap">
+          <img src="michal.jpg" alt="Michal Frolich" onerror="this.style.display='none'">
+          <div class="team-initials">MF</div>
+        </div>
+        <div class="team-body">
+          <div class="team-name">Michal Frolich</div>
+          <div class="team-role">Structural Engineering Lead</div>
+          <p class="team-bio">Offshore foundation integrity specialist. Defines inspection protocols, interprets ultrasonic and cathodic protection data, and translates raw readings into actionable lifetime-extension assessments.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════ CONTACT -->
+<section id="contact">
+  <div class="contact-inner reveal">
+    <span class="eyebrow">Get In Touch</span>
+    <h2>Ready to stop chartering vessels?</h2>
+    <p>We're seeking strategic partners, pilot operators, and seed investors to bring autonomous subsea inspection to scale. Eindhoven University of Technology — Group 6.</p>
+    <a class="email-link" href="mailto:sunkenrobotics@gmail.com">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+      sunkenrobotics@gmail.com
+    </a>
+    <div class="contact-meta">Eindhoven · Netherlands · Seed Round 2026</div>
+  </div>
+</section>
+
+<footer>© 2026 Sunken Robotics · Eindhoven University of Technology · Autonomous Offshore Inspection</footer>
+
+<script>
+/* ═══ HERO CANVAS ═══ */
+(function(){
+  const c=document.getElementById('hero-canvas'),ctx=c.getContext('2d');
+  let W,H,pts=[];
+  function resize(){W=c.width=c.offsetWidth;H=c.height=c.offsetHeight}
+  resize();
+  window.addEventListener('resize',()=>{resize();init()});
+  function Pt(){
+    this.r=()=>{
+      this.x=Math.random()*W;this.y=H+Math.random()*80;
+      this.rad=Math.random()*2.5+0.5;this.spd=Math.random()*0.5+0.15;
+      this.drift=(Math.random()-0.5)*0.25;this.op=Math.random()*0.35+0.04;
+      this.col=Math.random()>0.5?'0,212,255':'0,184,169';
+    };
+    this.r();this.y=Math.random()*H;
+  }
+  function init(){pts=[];const n=Math.floor(W*H/6000);for(let i=0;i<n;i++)pts.push(new Pt())}
+  init();
+  let t=0;
+  function draw(){
+    t+=0.005;ctx.clearRect(0,0,W,H);
+    // gradient
+    const g=ctx.createLinearGradient(0,0,0,H);
+    g.addColorStop(0,'rgba(6,16,30,0)');g.addColorStop(1,'rgba(6,16,30,0.5)');
+    ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+    // light rays
+    for(let i=0;i<4;i++){
+      const rx=W*(0.15+i*0.24)+Math.sin(t+i)*30;
+      const rg=ctx.createLinearGradient(rx,0,rx+60,H);
+      rg.addColorStop(0,'rgba(0,212,255,0.035)');rg.addColorStop(1,'rgba(0,212,255,0)');
+      ctx.beginPath();ctx.moveTo(rx,0);ctx.lineTo(rx+80,H);ctx.lineTo(rx-40,H);ctx.lineTo(rx-20,0);
+      ctx.fillStyle=rg;ctx.fill();
+    }
+    // bubbles
+    pts.forEach(p=>{
+      ctx.beginPath();ctx.arc(p.x,p.y,p.rad,0,Math.PI*2);
+      ctx.strokeStyle=`rgba(${p.col},${p.op})`;ctx.lineWidth=0.8;ctx.stroke();
+      if(p.rad>1.4){
+        ctx.beginPath();ctx.arc(p.x-p.rad*0.3,p.y-p.rad*0.3,p.rad*0.22,0,Math.PI*2);
+        ctx.fillStyle=`rgba(${p.col},${p.op*0.7})`;ctx.fill();
+      }
+      p.y-=p.spd;p.x+=p.drift;
+      if(p.y<-8)p.r();
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ═══ SCROLL REVEAL — replays every time ═══ */
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting) e.target.classList.add('up');
+    else e.target.classList.remove('up');
+  });
+},{threshold:0.12});
+document.querySelectorAll('.reveal,.reveal-l,.reveal-r,.reveal-s').forEach(el=>obs.observe(el));
+
+/* ═══ STEP LIST STAGGER — replays every time ═══ */
+const stepsObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.querySelectorAll('.step-row').forEach((r,i)=>{
+        r.classList.remove('show');
+        setTimeout(()=>r.classList.add('show'),i*140);
+      });
+    } else {
+      e.target.querySelectorAll('.step-row').forEach(r=>r.classList.remove('show'));
+    }
+  });
+},{threshold:0.1});
+const sl=document.getElementById('step-list');
+if(sl)stepsObs.observe(sl);
+
+/* ═══ COUNTERS — replays every time ═══ */
+function count(el,target,prefix,dur){
+  const s=performance.now();
+  const step=now=>{
+    const t=Math.min((now-s)/dur,1);
+    const e=t<0.5?2*t*t:-1+(4-2*t)*t;
+    el.textContent=prefix+Math.round(e*target).toLocaleString('de-DE');
+    if(t<1)requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+let counting=false;
+const costObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting&&!counting){
+      counting=true;
+      count(document.getElementById('cOld'),539400,'€',1800);
+      count(document.getElementById('cNew'),150000,'€',1800);
+      const badge=document.getElementById('savPct');
+      const s2=performance.now();
+      const step2=now=>{
+        const t=Math.min((now-s2)/1800,1);
+        const e2=t<0.5?2*t*t:-1+(4-2*t)*t;
+        badge.textContent=Math.round(e2*70)+'%';
+        if(t<1)requestAnimationFrame(step2);
+      };
+      requestAnimationFrame(step2);
+      setTimeout(()=>counting=false,2000);
+    }
+    if(!e.isIntersecting){
+      const old=document.getElementById('cOld');
+      const nw=document.getElementById('cNew');
+      const bp=document.getElementById('savPct');
+      if(old)old.textContent='€0';
+      if(nw)nw.textContent='€0';
+      if(bp)bp.textContent='0%';
+    }
+  });
+},{threshold:0.3});
+const impSec=document.getElementById('impact');
+if(impSec)costObs.observe(impSec);
+
+/* ═══ NAV HIGHLIGHT ═══ */
+const navAs=document.querySelectorAll('.nav-links a');
+window.addEventListener('scroll',()=>{
+  let cur='';
+  document.querySelectorAll('section[id]').forEach(s=>{
+    if(window.scrollY>=s.offsetTop-80)cur=s.id;
+  });
+  navAs.forEach(a=>a.style.color=a.getAttribute('href')==='#'+cur?'var(--white)':'');
+},{passive:true});
+</script>
+</body>
+</html>
