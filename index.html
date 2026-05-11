@@ -188,13 +188,55 @@ footer{background:var(--ink);border-top:1px solid var(--border-d);padding:1.5rem
   .mission-grid,.how-grid,.co2-grid,.impact-grid{grid-template-columns:1fr}
   .drone-diagram{position:relative;top:0}
   .impact-cell{padding:2.5rem 1.8rem}
+  .mission-grid,.how-grid,.co2-grid{gap:3rem}
 }
+
+/* TABLET */
+@media(max-width:768px){
+  #mission,#how,#impact,#co2,#team,#diagram{padding:5rem 1.5rem}
+  #contact{padding:6rem 1.5rem}
+  .wrap{padding:0 1.5rem}
+  /* Main turbine SVG: horizontally scrollable so labels stay readable */
+  .diagram-wrap{overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch}
+  .diagram-wrap svg{min-width:720px;width:720px;height:auto}
+}
+
+/* PHONE */
 @media(max-width:640px){
   nav{padding:0 1rem}
   .nav-links{display:none}
-  h1{font-size:2.2rem}
-  .impact-big{font-size:3.5rem}
+  #mission,#how,#impact,#co2,#team,#diagram{padding:4rem 1rem}
+  #contact{padding:5rem 1rem}
+  .wrap{padding:0 1rem}
+  h1{font-size:1.95rem;letter-spacing:-0.02em}
+  h2{font-size:1.65rem}
+  .hero-inner{padding:3rem 1rem 2.5rem}
+  .hero-tag{font-size:0.65rem}
+  .hero-sub{font-size:0.92rem}
+  .btn-p,.btn-o{padding:0.8rem 1.5rem;font-size:0.84rem}
+  .stat-num{font-size:2.6rem}
+  .stat-block{padding:1.3rem 1.4rem}
+  .impact-big{font-size:2.8rem}
+  .impact-cell{padding:1.8rem 1.2rem}
+  .cost-amt{font-size:1.6rem}
+  .mission-grid,.co2-grid{gap:2.5rem}
+  .diagram-wrap svg{min-width:620px;width:620px}
+  .email-link{font-size:0.92rem;padding:0.85rem 1.2rem;width:100%;justify-content:center}
+  .co2-points{grid-template-columns:1fr}
+  .team-grid{grid-template-columns:repeat(2,1fr)}
+  .diagram-hd{margin-bottom:2rem}
 }
+
+/* SMALL PHONE */
+@media(max-width:400px){
+  #mission,#how,#impact,#co2,#team,#diagram{padding:3.5rem 0.8rem}
+  #contact{padding:4rem 0.8rem}
+  .wrap{padding:0 0.8rem}
+  h2{font-size:1.45rem}
+  .stat-num{font-size:2.2rem}
+  .team-grid{grid-template-columns:1fr}
+}
+
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.01ms!important;transition-duration:0.01ms!important}}
 </style>
 </head>
