@@ -43,8 +43,24 @@ nav{
   backdrop-filter:blur(14px);
   border-bottom:1px solid var(--border-d);
 }
-.logo{text-decoration:none;display:flex;align-items:center}
-.nav-logo{height:36px;width:auto;display:block}
+.logo{text-decoration:none;display:flex;align-items:center;position:relative;overflow:hidden;border-radius:4px}
+.nav-logo{
+  height:36px;width:auto;display:block;
+  filter:brightness(1.45) contrast(1.15) saturate(1.35) drop-shadow(0 0 6px rgba(0,180,255,0.45));
+}
+/* Glisten sweep animation */
+.logo::after{
+  content:'';position:absolute;top:-10%;left:-120%;
+  width:55%;height:120%;
+  background:linear-gradient(105deg,transparent 30%,rgba(255,255,255,0.55) 50%,transparent 70%);
+  transform:skewX(-18deg);
+  animation:logoShine 3.5s ease-in-out infinite;
+  pointer-events:none;
+}
+@keyframes logoShine{
+  0%{left:-120%}
+  45%,100%{left:160%}
+}
 .nav-links{display:flex;gap:2.2rem;list-style:none}
 .nav-links a{color:rgba(255,255,255,0.55);text-decoration:none;font-size:0.8rem;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;transition:color 0.2s}
 .nav-links a:hover{color:var(--white)}
