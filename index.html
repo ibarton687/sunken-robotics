@@ -125,7 +125,7 @@ section{position:relative}
 .diagram-hd{text-align:center;margin-bottom:4rem}
 .diagram-hd h2{max-width:680px;margin:0 auto}
 .diagram-hd p{color:rgba(255,255,255,0.45);margin-top:1rem;max-width:520px;margin-left:auto;margin-right:auto}
-.diagram-wrap{max-width:1000px;margin:0 auto;background:rgba(10,22,40,0.6);border:1px solid var(--border-d);border-radius:16px;overflow:hidden;position:relative}
+.diagram-wrap{width:100%;margin-top:3rem;overflow:hidden;position:relative}
 .diagram-wrap svg{display:block;width:100%;height:auto}
 
 /* HOW IT WORKS ─────────────────────────── */
@@ -159,9 +159,10 @@ section{position:relative}
 
 /* CO2 ───────────────────────────────────── */
 #co2{background:var(--fog2);padding:7rem 2rem;color:var(--ink)}
-.co2-grid{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;margin-top:3rem}
+.co2-grid{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:start;margin-top:3rem}
 .co2-text p{color:var(--muted);margin-top:1rem;font-size:1rem;line-height:1.8}
-.co2-points{display:flex;flex-direction:column;gap:1.2rem;margin-top:2rem}
+.co2-points{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;margin-top:2.5rem}
+@media(max-width:700px){.co2-points{grid-template-columns:1fr}}
 .co2-pt{display:flex;align-items:flex-start;gap:1rem;padding:1.2rem 1.4rem;border:1px solid var(--border-l);border-radius:8px;background:var(--white)}
 .co2-icon{flex-shrink:0;width:2.2rem;height:2.2rem;border-radius:6px;background:rgba(0,184,169,0.12);display:flex;align-items:center;justify-content:center}
 .co2-pt-text h4{font-size:0.88rem;font-weight:700;color:var(--ink);margin-bottom:0.2rem}
@@ -272,235 +273,241 @@ footer{background:var(--ink);border-top:1px solid var(--border-d);padding:1.5rem
       <h2>A permanent eye on your foundations</h2>
       <p>The drone docks inside the turbine structure — always there, always ready. No vessel. No weather delays. No carbon.</p>
     </div>
-    <div class="diagram-wrap reveal" style="transition-delay:0.15s">
-      <!-- TURBINE + UNDERWATER INSPECTION DIAGRAM -->
-      <svg viewBox="0 0 1000 560" xmlns="http://www.w3.org/2000/svg">
+  </div>
+  <div class="diagram-wrap reveal" style="transition-delay:0.15s">
+      <svg viewBox="0 0 1400 540" xmlns="http://www.w3.org/2000/svg">
         <defs>
-          <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#06101e"/>
-            <stop offset="100%" stop-color="#0d2137"/>
-          </linearGradient>
-          <linearGradient id="seaGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#062a40"/>
-            <stop offset="100%" stop-color="#021520"/>
-          </linearGradient>
-          <linearGradient id="stressGrad" x1="0" y1="1" x2="0" y2="0">
-            <stop offset="0%" stop-color="#0010ff"/>
-            <stop offset="40%" stop-color="#00aaff"/>
-            <stop offset="75%" stop-color="#00ffc3"/>
-            <stop offset="90%" stop-color="#ffaa00"/>
-            <stop offset="100%" stop-color="#ff4400"/>
-          </linearGradient>
-          <linearGradient id="towerGrad" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stop-color="#1a3a55"/>
-            <stop offset="50%" stop-color="#2a5572"/>
-            <stop offset="100%" stop-color="#1a3a55"/>
-          </linearGradient>
-          <filter id="glow">
-            <feGaussianBlur stdDeviation="3" result="blur"/>
-            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-          </filter>
-          <filter id="glow2">
-            <feGaussianBlur stdDeviation="6" result="blur"/>
-            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-          </filter>
-          <pattern id="gridP" width="40" height="40" patternUnits="userSpaceOnUse">
-            <path d="M40 0L0 0 0 40" fill="none" stroke="rgba(0,212,255,0.07)" stroke-width="0.7"/>
-          </pattern>
-          <clipPath id="seaClip">
-            <rect x="0" y="230" width="1000" height="330"/>
-          </clipPath>
-          <radialGradient id="droneGlow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stop-color="#00d4ff" stop-opacity="0.5"/>
-            <stop offset="100%" stop-color="#00d4ff" stop-opacity="0"/>
-          </radialGradient>
+          <linearGradient id="skyG" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#020a15"/><stop offset="100%" stop-color="#071828"/></linearGradient>
+          <linearGradient id="seaG" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#031e2e"/><stop offset="60%" stop-color="#011018"/><stop offset="100%" stop-color="#010810"/></linearGradient>
+          <linearGradient id="twrG" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#0a1e30"/><stop offset="35%" stop-color="#1a4060"/><stop offset="65%" stop-color="#1e4870"/><stop offset="100%" stop-color="#0a1e30"/></linearGradient>
+          <linearGradient id="stressV" x1="0" y1="1" x2="0" y2="0"><stop offset="0%" stop-color="#0010ff"/><stop offset="30%" stop-color="#00aaff"/><stop offset="60%" stop-color="#00ffc3"/><stop offset="80%" stop-color="#ffaa00"/><stop offset="100%" stop-color="#ff2200"/></linearGradient>
+          <linearGradient id="pileShade" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#000" stop-opacity="0.6"/><stop offset="30%" stop-color="#fff" stop-opacity="0.04"/><stop offset="55%" stop-color="#fff" stop-opacity="0.06"/><stop offset="100%" stop-color="#000" stop-opacity="0.55"/></linearGradient>
+          <linearGradient id="legG" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ff2200"/><stop offset="22%" stop-color="#ffaa00"/><stop offset="55%" stop-color="#00ffc3"/><stop offset="80%" stop-color="#00aaff"/><stop offset="100%" stop-color="#0010ff"/></linearGradient>
+          <linearGradient id="scanG" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#00d4ff" stop-opacity="0.5"/><stop offset="100%" stop-color="#00d4ff" stop-opacity="0"/></linearGradient>
+          <filter id="glow"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          <filter id="softGlow"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
         </defs>
 
-        <!-- Sky -->
-        <rect width="1000" height="560" fill="url(#skyGrad)"/>
-        <!-- Grid overlay -->
-        <rect width="1000" height="560" fill="url(#gridP)" opacity="0.6"/>
+        <!-- ── BACKGROUNDS ── -->
+        <rect width="1400" height="540" fill="url(#skyG)"/>
+        <rect x="0" y="248" width="1400" height="292" fill="url(#seaG)"/>
 
-        <!-- Perspective grid lines -->
-        <g stroke="rgba(0,212,255,0.08)" stroke-width="0.8">
-          <line x1="500" y1="280" x2="0" y2="560"/>
-          <line x1="500" y1="280" x2="1000" y2="560"/>
-          <line x1="500" y1="280" x2="0" y2="280"/>
-          <line x1="500" y1="280" x2="1000" y2="280"/>
-          <line x1="500" y1="280" x2="150" y2="490"/>
-          <line x1="500" y1="280" x2="850" y2="490"/>
-          <line x1="500" y1="280" x2="250" y2="560"/>
-          <line x1="500" y1="280" x2="750" y2="560"/>
+        <!-- Subtle underwater light rays -->
+        <path d="M670,248 L635,490" stroke="rgba(0,180,255,0.06)" stroke-width="32" stroke-linecap="round"/>
+        <path d="M715,248 L748,470" stroke="rgba(0,180,255,0.05)" stroke-width="22" stroke-linecap="round"/>
+        <path d="M590,248 L550,400" stroke="rgba(0,180,255,0.04)" stroke-width="14" stroke-linecap="round"/>
+
+        <!-- ── WIND TURBINE ── -->
+        <!-- Tower -->
+        <polygon points="694,38 706,38 719,248 681,248" fill="url(#twrG)"/>
+        <polygon points="699,38 701,38 710,248 690,248" fill="rgba(255,255,255,0.03)"/>
+        <line x1="681" y1="248" x2="694" y2="38" stroke="rgba(0,0,0,0.35)" stroke-width="1.5"/>
+        <line x1="719" y1="248" x2="706" y2="38" stroke="rgba(0,0,0,0.25)" stroke-width="1"/>
+
+        <!-- Nacelle -->
+        <rect x="666" y="24" width="80" height="22" rx="6" fill="#12304a" stroke="rgba(0,212,255,0.28)" stroke-width="0.8"/>
+        <rect x="666" y="24" width="80" height="7" rx="6" fill="rgba(255,255,255,0.04)"/>
+        <rect x="742" y="29" width="22" height="12" rx="3" fill="#0e2840" stroke="rgba(0,212,255,0.18)" stroke-width="0.6"/>
+
+        <!-- Hub (behind blades) -->
+        <circle cx="700" cy="36" r="13" fill="#162a3e" stroke="rgba(0,212,255,0.4)" stroke-width="1"/>
+        <circle cx="700" cy="36" r="8" fill="#0e2030"/>
+
+        <!-- Blade 1 — upper-left -->
+        <path d="M700,36 C694,28 675,14 650,3 C625,-7 582,-14 540,-10 C542,-5 570,-1 600,7 C630,15 668,28 700,36 Z" fill="#b8ccdc" stroke="rgba(255,255,255,0.06)" stroke-width="0.4"/>
+        <path d="M700,36 C694,28 675,14 650,3 C625,-7 582,-14 540,-10" fill="none" stroke="rgba(255,255,255,0.18)" stroke-width="1.2" stroke-linecap="round"/>
+
+        <!-- Blade 2 — upper-right -->
+        <path d="M700,36 C706,28 725,14 750,3 C775,-7 818,-14 860,-10 C858,-5 830,-1 800,7 C770,15 732,28 700,36 Z" fill="#c6d8e8" stroke="rgba(255,255,255,0.06)" stroke-width="0.4"/>
+        <path d="M700,36 C706,28 725,14 750,3 C775,-7 818,-14 860,-10" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1.2" stroke-linecap="round"/>
+
+        <!-- Blade 3 — downward -->
+        <path d="M700,36 C704,50 712,90 718,128 C724,162 725,200 724,222 C719,221 716,183 711,148 C705,112 700,64 700,36 Z" fill="#aac2d4" stroke="rgba(255,255,255,0.05)" stroke-width="0.4"/>
+        <path d="M700,36 C704,50 712,90 718,128 C724,162 725,200 724,222" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="0.9" stroke-linecap="round"/>
+
+        <!-- Hub cap (front) -->
+        <circle cx="700" cy="36" r="11" fill="#1a3448" stroke="rgba(0,212,255,0.5)" stroke-width="1.3"/>
+        <circle cx="700" cy="36" r="6" fill="#0e2030"/>
+        <circle cx="700" cy="36" r="2.5" fill="rgba(0,212,255,0.65)"/>
+        <circle cx="698" cy="34" r="1.2" fill="rgba(255,255,255,0.35)"/>
+
+        <!-- ── WATER SURFACE ── -->
+        <rect x="0" y="245" width="1400" height="5" fill="rgba(3,26,42,0.85)"/>
+        <path d="M0,248 Q175,243 350,248 Q525,253 700,248 Q875,243 1050,248 Q1225,253 1400,248 L1400,245 L0,245 Z" fill="#031e2e"/>
+        <path d="M0,248 Q175,243 350,248 Q525,253 700,248 Q875,243 1050,248 Q1225,253 1400,248" fill="none" stroke="rgba(0,212,255,0.4)" stroke-width="1.1"/>
+        <path d="M80,247 Q140,245 200,247" fill="none" stroke="rgba(255,255,255,0.13)" stroke-width="1.3"/>
+        <path d="M950,246 Q1020,244 1090,246" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1.1"/>
+
+        <!-- ── MONOPILE ── -->
+        <rect x="681" y="248" width="38" height="252" fill="url(#stressV)"/>
+        <rect x="681" y="248" width="38" height="252" fill="url(#pileShade)"/>
+        <rect x="681" y="248" width="3" height="252" fill="rgba(0,0,0,0.5)"/>
+        <rect x="716" y="248" width="3" height="252" fill="rgba(0,0,0,0.42)"/>
+        <!-- Weld rings -->
+        <g fill="none" stroke="rgba(0,0,0,0.4)" stroke-width="1">
+          <ellipse cx="700" cy="318" rx="19" ry="3.5"/>
+          <ellipse cx="700" cy="388" rx="19" ry="3.5"/>
+          <ellipse cx="700" cy="458" rx="19" ry="3.5"/>
         </g>
 
-        <!-- Horizon line / Water surface -->
-        <rect x="0" y="240" width="1000" height="320" fill="url(#seaGrad)"/>
-        <!-- Wave effect -->
-        <path d="M0,242 Q125,236 250,242 Q375,248 500,242 Q625,236 750,242 Q875,248 1000,242 L1000,240 L0,240 Z" fill="#062a40" opacity="0.8"/>
-        <path d="M0,244 Q100,240 200,244 Q300,248 400,244 Q500,240 600,244 Q700,248 800,244 Q900,240 1000,244" fill="none" stroke="rgba(0,212,255,0.3)" stroke-width="1"/>
-        <!-- Sea surface shimmer -->
-        <path d="M50,241 Q80,239 110,241" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
-        <path d="M300,243 Q340,241 380,243" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
-        <path d="M700,241 Q740,239 770,241" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="1.5"/>
+        <!-- Defect markers -->
+        <circle cx="690" cy="355" r="5" fill="#ff2200" filter="url(#glow)" opacity="0.85"/>
+        <circle cx="690" cy="355" r="3" fill="#ff5533"/>
+        <line x1="685" y1="350" x2="662" y2="338" stroke="rgba(255,60,0,0.65)" stroke-width="0.8"/>
+        <rect x="632" y="330" width="30" height="11" rx="2" fill="rgba(255,40,0,0.14)" stroke="rgba(255,68,0,0.45)" stroke-width="0.6"/>
+        <text x="647" y="338.5" text-anchor="middle" fill="#ff4422" font-size="7" font-family="monospace" font-weight="bold">CRACK</text>
+        <circle cx="712" cy="415" r="4" fill="#ffaa00" opacity="0.8" filter="url(#softGlow)"/>
+        <circle cx="712" cy="415" r="2" fill="#ffcc44"/>
 
-        <!-- TURBINE TOWER (above water) -->
-        <polygon points="478,40 522,40 514,240 486,240" fill="url(#towerGrad)" stroke="rgba(0,212,255,0.2)" stroke-width="0.5"/>
-        <!-- Tower highlight -->
-        <polygon points="499,40 502,40 502,240 499,240" fill="rgba(255,255,255,0.06)"/>
-
-        <!-- NACELLE -->
-        <rect x="468" y="32" width="64" height="22" rx="6" fill="#1e4060" stroke="rgba(0,212,255,0.3)" stroke-width="0.8"/>
-        <rect x="530" y="39" width="18" height="8" rx="2" fill="#1e4060"/>
-
-        <!-- BLADES -->
-        <!-- Blade 1 - upper left -->
-        <path d="M492,36 C480,20 440,5 400,8 C440,12 475,25 490,38 Z" fill="#c8d8e8" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/>
-        <!-- Blade 2 - upper right -->
-        <path d="M508,36 C520,20 560,5 600,8 C560,12 525,25 510,38 Z" fill="#d0dde8" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/>
-        <!-- Blade 3 - down -->
-        <path d="M500,44 C500,60 498,105 490,145 C494,105 498,62 500,46 Z" fill="#b8ccd8" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/>
-        <!-- Hub -->
-        <circle cx="500" cy="40" r="8" fill="#2a4a65" stroke="rgba(0,212,255,0.4)" stroke-width="1"/>
-
-        <!-- MONOPILE below water — with structural stress coloring -->
-        <rect x="480" y="240" width="40" height="230" fill="url(#stressGrad)" opacity="0.85" rx="2"/>
-        <!-- Monopile outline -->
-        <rect x="480" y="240" width="40" height="230" fill="none" stroke="rgba(0,212,255,0.25)" stroke-width="0.8" rx="2"/>
-        <!-- Monopile highlight -->
-        <rect x="480" y="240" width="6" height="230" fill="rgba(255,255,255,0.04)" rx="2"/>
-
-        <!-- Foundation base -->
-        <polygon points="450,460 550,460 560,470 440,470" fill="#0a1e30" stroke="rgba(0,212,255,0.2)" stroke-width="0.8"/>
-        <rect x="440" y="470" width="120" height="12" rx="2" fill="#081828" stroke="rgba(0,212,255,0.15)" stroke-width="0.6"/>
-
-        <!-- Seabed -->
-        <rect x="0" y="482" width="1000" height="78" fill="#030d18"/>
-        <path d="M0,482 Q200,478 400,482 Q600,486 800,482 Q900,480 1000,482" fill="none" stroke="rgba(0,212,255,0.1)" stroke-width="1"/>
-        <!-- Seabed texture -->
-        <path d="M0,488 Q50,486 100,488 Q150,490 200,488" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
-        <path d="M700,486 Q770,484 840,486 Q910,488 980,486" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
-
-        <!-- Marine growth on base -->
-        <g opacity="0.6">
-          <path d="M446,468 Q444,458 447,452" fill="none" stroke="#00b8a9" stroke-width="1.5" stroke-linecap="round"/>
-          <path d="M452,470 Q449,462 453,456" fill="none" stroke="#00b8a9" stroke-width="1.2" stroke-linecap="round"/>
-          <path d="M554,468 Q556,458 553,452" fill="none" stroke="#00b8a9" stroke-width="1.5" stroke-linecap="round"/>
-          <path d="M548,470 Q551,462 547,456" fill="none" stroke="#00b8a9" stroke-width="1.2" stroke-linecap="round"/>
+        <!-- Marine growth -->
+        <g fill="none" stroke-linecap="round">
+          <path d="M681,485 Q672,474 670,462 Q668,450 675,443" stroke="#00a860" stroke-width="2" opacity="0.6"/>
+          <path d="M681,491 Q674,480 673,468 Q671,456 677,450" stroke="#008a50" stroke-width="1.4" opacity="0.4"/>
+          <path d="M719,487 Q728,476 730,464 Q732,452 726,445" stroke="#00a860" stroke-width="2" opacity="0.6"/>
+          <path d="M719,493 Q726,481 728,469 Q730,457 724,451" stroke="#008a50" stroke-width="1.4" opacity="0.4"/>
         </g>
 
-        <!-- DRONE with glowing orbit -->
-        <!-- Orbit path (ellipse around monopile) -->
-        <ellipse cx="500" cy="380" rx="80" ry="28" fill="none" stroke="rgba(0,212,255,0.18)" stroke-width="1" stroke-dasharray="5,4"/>
-        <!-- Orbit glow -->
-        <ellipse cx="500" cy="380" rx="80" ry="28" fill="none" stroke="rgba(0,212,255,0.08)" stroke-width="4"/>
-
-        <!-- Drone body -->
-        <g id="drone" filter="url(#glow)">
-          <!-- Drone at 9 o'clock position on orbit -->
-          <ellipse cx="420" cy="380" rx="22" ry="10" fill="url(#droneGlow)" opacity="0.7"/>
-          <rect x="412" y="375" width="16" height="10" rx="3" fill="#00d4ff" opacity="0.9"/>
-          <!-- Thrusters -->
-          <circle cx="411" cy="376" r="3" fill="#005580" stroke="#00d4ff" stroke-width="0.8"/>
-          <circle cx="429" cy="376" r="3" fill="#005580" stroke="#00d4ff" stroke-width="0.8"/>
-          <circle cx="411" cy="384" r="3" fill="#005580" stroke="#00d4ff" stroke-width="0.8"/>
-          <circle cx="429" cy="384" r="3" fill="#005580" stroke="#00d4ff" stroke-width="0.8"/>
-          <!-- Camera lens -->
-          <circle cx="420" cy="380" r="2.5" fill="#00ffcc"/>
-          <!-- Thruster wash -->
-          <line x1="406" y1="376" x2="402" y2="374" stroke="rgba(0,212,255,0.5)" stroke-width="1"/>
-          <line x1="406" y1="384" x2="402" y2="386" stroke="rgba(0,212,255,0.5)" stroke-width="1"/>
-          <!-- Drone label -->
-          <rect x="392" y="362" width="56" height="10" rx="2" fill="rgba(0,212,255,0.12)" stroke="rgba(0,212,255,0.3)" stroke-width="0.5"/>
-          <text x="420" y="370" text-anchor="middle" fill="#00d4ff" font-size="6.5" font-family="monospace" letter-spacing="0.05em">SR-DRONE v1</text>
+        <!-- ── SCOUR PROTECTION + SEABED ── -->
+        <g fill="#0a1a26" stroke="rgba(0,212,255,0.08)" stroke-width="0.4">
+          <ellipse cx="640" cy="510" rx="22" ry="7"/>
+          <ellipse cx="668" cy="516" rx="16" ry="5.5"/>
+          <ellipse cx="696" cy="518" rx="24" ry="6.5"/>
+          <ellipse cx="724" cy="516" rx="17" ry="5.5"/>
+          <ellipse cx="754" cy="511" rx="20" ry="6.5"/>
         </g>
+        <rect x="0" y="520" width="1400" height="20" fill="#030b14"/>
+        <path d="M0,520 Q350,516 700,520 Q1050,524 1400,520" fill="none" stroke="rgba(0,212,255,0.08)" stroke-width="0.8"/>
 
-        <!-- Data connection line: drone to cloud/HQ -->
-        <path d="M420,375 Q380,340 320,300 Q280,275 240,265" fill="none" stroke="rgba(0,212,255,0.4)" stroke-width="1" stroke-dasharray="4,3"/>
-        <!-- Small data nodes along line -->
-        <circle cx="370" cy="337" r="2" fill="#00d4ff" opacity="0.6"/>
-        <circle cx="305" cy="294" r="2" fill="#00d4ff" opacity="0.4"/>
-
-        <!-- STRESS LEGEND (like the IoT platform screenshots) -->
-        <rect x="30" y="270" width="90" height="170" rx="6" fill="rgba(6,16,30,0.85)" stroke="rgba(0,212,255,0.2)" stroke-width="0.8"/>
-        <text x="75" y="288" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-size="8" font-family="monospace">Von Mises [N]</text>
-        <!-- Gradient bar -->
-        <defs>
-          <linearGradient id="legendGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#ff4400"/>
-            <stop offset="40%" stop-color="#ffaa00"/>
-            <stop offset="70%" stop-color="#00ffc3"/>
-            <stop offset="90%" stop-color="#00aaff"/>
-            <stop offset="100%" stop-color="#0010ff"/>
-          </linearGradient>
-        </defs>
-        <rect x="44" y="295" width="18" height="120" rx="2" fill="url(#legendGrad)"/>
-        <!-- Legend ticks -->
-        <text x="68" y="300" fill="rgba(255,255,255,0.5)" font-size="7" font-family="monospace">3.2e6</text>
-        <text x="68" y="325" fill="rgba(255,255,255,0.5)" font-size="7" font-family="monospace">2.4e6</text>
-        <text x="68" y="350" fill="rgba(255,255,255,0.5)" font-size="7" font-family="monospace">1.6e6</text>
-        <text x="68" y="375" fill="rgba(255,255,255,0.5)" font-size="7" font-family="monospace">0.8e6</text>
-        <text x="68" y="415" fill="rgba(255,255,255,0.5)" font-size="7" font-family="monospace">0.0e2</text>
-        <!-- Defect dot highlighted on monopile -->
-        <circle cx="485" cy="350" r="4" fill="#ff4400" filter="url(#glow2)" opacity="0.9"/>
-        <circle cx="515" cy="390" r="3" fill="#ffaa00" filter="url(#glow)" opacity="0.8"/>
-        <!-- Annotation lines from defects -->
-        <line x1="481" y1="350" x2="465" y2="340" stroke="rgba(255,68,0,0.6)" stroke-width="0.8"/>
-        <rect x="440" y="333" width="24" height="10" rx="2" fill="rgba(255,68,0,0.15)" stroke="rgba(255,68,0,0.4)" stroke-width="0.5"/>
-        <text x="452" y="340" text-anchor="middle" fill="#ff4d00" font-size="6.5" font-family="monospace">CRACK</text>
-
-        <!-- DATA READOUT panel top right -->
-        <rect x="760" y="260" width="210" height="145" rx="8" fill="rgba(6,16,30,0.88)" stroke="rgba(0,212,255,0.2)" stroke-width="0.8"/>
-        <text x="775" y="280" fill="#00d4ff" font-size="8" font-family="monospace" font-weight="bold" letter-spacing="0.08em">STRUCTURAL HEALTH MONITOR</text>
-        <line x1="760" y1="286" x2="970" y2="286" stroke="rgba(0,212,255,0.15)" stroke-width="0.6"/>
-        <!-- Readings -->
-        <g font-family="monospace" font-size="8">
-          <text x="775" y="302" fill="rgba(255,255,255,0.4)">Wall Thickness</text>
-          <text x="940" y="302" text-anchor="end" fill="#00ffc3">18.2 mm</text>
-          <text x="775" y="318" fill="rgba(255,255,255,0.4)">Corrosion Rate</text>
-          <text x="940" y="318" text-anchor="end" fill="#ffaa00">0.12 mm/yr</text>
-          <text x="775" y="334" fill="rgba(255,255,255,0.4)">CP Potential</text>
-          <text x="940" y="334" text-anchor="end" fill="#00d4ff">-1.04 V</text>
-          <text x="775" y="350" fill="rgba(255,255,255,0.4)">Scour Depth</text>
-          <text x="940" y="350" text-anchor="end" fill="#00ffc3">0.3 m</text>
-          <text x="775" y="366" fill="rgba(255,255,255,0.4)">Defects Found</text>
-          <text x="940" y="366" text-anchor="end" fill="#ff4d6d">2 FLAGGED</text>
-        </g>
-        <line x1="760" y1="374" x2="970" y2="374" stroke="rgba(0,212,255,0.1)" stroke-width="0.5"/>
-        <text x="775" y="388" fill="rgba(0,212,255,0.5)" font-size="7" font-family="monospace">LAST SCAN: 4h 12m ago · AUTO-UPLOADING</text>
-        <!-- Blinking dot -->
-        <circle cx="762" cy="385" r="3" fill="#00d4ff">
-          <animate attributeName="opacity" values="1;0.2;1" dur="2s" repeatCount="indefinite"/>
+        <!-- ── DRONE ── -->
+        <g id="drone-descend" style="opacity:0">
+        <!-- Scanning beam -->
+        <path d="M620,370 L681,345 L681,395 Z" fill="url(#scanG)" opacity="0.6">
+          <animate attributeName="opacity" values="0.35;0.65;0.35" dur="2.6s" repeatCount="indefinite"/>
+        </path>
+        <!-- Sweep line -->
+        <line x1="620" y1="370" x2="681" y2="353" stroke="rgba(0,212,255,0.9)" stroke-width="1.1">
+          <animateTransform attributeName="transform" type="rotate" from="-8 620 370" to="8 620 370" dur="2.6s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0.5;1;0.5" dur="2.6s" repeatCount="indefinite"/>
+        </line>
+        <!-- Scan glow on pile -->
+        <circle cx="681" cy="370" r="5" fill="rgba(0,212,255,0.3)" filter="url(#softGlow)">
+          <animate attributeName="cy" values="350;390;350" dur="2.6s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0.3;0.7;0.3" dur="2.6s" repeatCount="indefinite"/>
         </circle>
 
-        <!-- Depth labels -->
-        <line x1="555" y1="240" x2="555" y2="470" stroke="rgba(0,212,255,0.12)" stroke-width="0.8" stroke-dasharray="4,3"/>
-        <line x1="550" y1="240" x2="560" y2="240" stroke="rgba(0,212,255,0.3)" stroke-width="1"/>
-        <line x1="550" y1="470" x2="560" y2="470" stroke="rgba(0,212,255,0.3)" stroke-width="1"/>
-        <text x="565" y="244" fill="rgba(255,255,255,0.35)" font-size="8" font-family="monospace">0m</text>
-        <text x="565" y="380" fill="rgba(255,255,255,0.35)" font-size="8" font-family="monospace">~25m</text>
-        <text x="565" y="474" fill="rgba(255,255,255,0.35)" font-size="8" font-family="monospace">~35m</text>
-        <!-- Arrow -->
-        <text x="558" y="356" fill="rgba(0,212,255,0.4)" font-size="10">↓</text>
+        <!-- Drone glow -->
+        <ellipse cx="592" cy="370" rx="50" ry="28" fill="rgba(0,212,255,0.06)" filter="url(#glow)"/>
+        <!-- Drone hull -->
+        <ellipse cx="592" cy="370" rx="36" ry="20" fill="#0e2840" stroke="rgba(0,212,255,0.5)" stroke-width="1.2"/>
+        <ellipse cx="589" cy="362" rx="23" ry="9" fill="rgba(255,255,255,0.045)"/>
+        <line x1="556" y1="370" x2="628" y2="370" stroke="rgba(0,212,255,0.2)" stroke-width="0.7"/>
 
-        <!-- DOCKING STATION label on turbine -->
-        <rect x="522" y="248" width="90" height="20" rx="3" fill="rgba(0,212,255,0.08)" stroke="rgba(0,212,255,0.25)" stroke-width="0.6"/>
-        <text x="567" y="261" text-anchor="middle" fill="rgba(0,212,255,0.8)" font-size="7.5" font-family="monospace">DOCKING STATION</text>
-        <line x1="522" y1="258" x2="514" y2="258" stroke="rgba(0,212,255,0.3)" stroke-width="0.7"/>
-        <!-- Small dock indicator on tower -->
-        <rect x="510" y="253" width="5" height="10" rx="1" fill="#00d4ff" opacity="0.7">
-          <animate attributeName="opacity" values="0.7;0.3;0.7" dur="3s" repeatCount="indefinite"/>
+        <!-- Front camera -->
+        <circle cx="628" cy="370" r="8" fill="#030e1a" stroke="rgba(0,212,255,0.7)" stroke-width="1.1"/>
+        <circle cx="628" cy="370" r="4.5" fill="#051525"/>
+        <circle cx="628" cy="370" r="2" fill="#00ffc3"/>
+        <circle cx="626" cy="368" r="1" fill="rgba(255,255,255,0.4)"/>
+
+        <!-- LED strip -->
+        <rect x="568" y="353" width="48" height="3" rx="1.5" fill="rgba(0,212,255,0.45)">
+          <animate attributeName="opacity" values="0.35;0.9;0.35" dur="2s" repeatCount="indefinite"/>
         </rect>
 
-        <!-- AI REPORT overlay bottom -->
-        <rect x="620" y="430" width="200" height="50" rx="6" fill="rgba(6,16,30,0.88)" stroke="rgba(0,184,169,0.3)" stroke-width="0.7"/>
-        <text x="635" y="448" fill="#00b8a9" font-size="7.5" font-family="monospace" font-weight="bold">AI REPORT GENERATED</text>
-        <text x="635" y="462" fill="rgba(255,255,255,0.35)" font-size="7" font-family="monospace">Priority: HIGH · 2 items require action</text>
-        <text x="635" y="474" fill="rgba(255,255,255,0.25)" font-size="6.5" font-family="monospace">Sent to onshore HQ · 06:42 UTC</text>
+        <!-- 4 thruster pods -->
+        <line x1="622" y1="354" x2="626" y2="347" stroke="rgba(0,212,255,0.3)" stroke-width="1.5"/>
+        <circle cx="626" cy="344" r="5" fill="#051828" stroke="rgba(0,212,255,0.55)" stroke-width="0.9"/>
+        <circle cx="626" cy="344" r="2" fill="rgba(0,212,255,0.45)"><animate attributeName="opacity" values="0.3;0.85;0.3" dur="0.3s" repeatCount="indefinite"/></circle>
 
-        <!-- Animation: drone orbiting -->
-        <animateTransform xlink:href="#drone" attributeName="transform" type="rotate" from="0 500 380" to="360 500 380" dur="12s" repeatCount="indefinite"/>
+        <line x1="622" y1="386" x2="626" y2="393" stroke="rgba(0,212,255,0.3)" stroke-width="1.5"/>
+        <circle cx="626" cy="396" r="5" fill="#051828" stroke="rgba(0,212,255,0.55)" stroke-width="0.9"/>
+        <circle cx="626" cy="396" r="2" fill="rgba(0,212,255,0.45)"><animate attributeName="opacity" values="0.3;0.85;0.3" dur="0.3s" begin="0.15s" repeatCount="indefinite"/></circle>
+
+        <line x1="562" y1="354" x2="558" y2="347" stroke="rgba(0,212,255,0.3)" stroke-width="1.5"/>
+        <circle cx="558" cy="344" r="5" fill="#051828" stroke="rgba(0,212,255,0.55)" stroke-width="0.9"/>
+        <circle cx="558" cy="344" r="2" fill="rgba(0,212,255,0.45)"><animate attributeName="opacity" values="0.3;0.85;0.3" dur="0.3s" begin="0.08s" repeatCount="indefinite"/></circle>
+
+        <line x1="562" y1="386" x2="558" y2="393" stroke="rgba(0,212,255,0.3)" stroke-width="1.5"/>
+        <circle cx="558" cy="396" r="5" fill="#051828" stroke="rgba(0,212,255,0.55)" stroke-width="0.9"/>
+        <circle cx="558" cy="396" r="2" fill="rgba(0,212,255,0.45)"><animate attributeName="opacity" values="0.3;0.85;0.3" dur="0.3s" begin="0.22s" repeatCount="indefinite"/></circle>
+
+        <!-- Thruster wake (rear) -->
+        <path d="M556,360 Q546,365 540,370 Q546,375 556,380" fill="none" stroke="rgba(0,212,255,0.3)" stroke-width="1.3" stroke-linecap="round"/>
+        <circle cx="540" cy="370" r="3" fill="rgba(0,212,255,0.1)">
+          <animate attributeName="r" values="3;6;3" dur="0.85s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0.4;0;0.4" dur="0.85s" repeatCount="indefinite"/>
+        </circle>
+
+        <!-- Drone label -->
+        <rect x="557" y="402" width="70" height="11" rx="2.5" fill="rgba(0,212,255,0.08)" stroke="rgba(0,212,255,0.28)" stroke-width="0.5"/>
+        <text x="592" y="410.5" text-anchor="middle" fill="#00d4ff" font-size="6.5" font-family="monospace" letter-spacing="0.06em">SR-DRONE · SCANNING</text>
+
+        <!-- Docking tether -->
+        <path d="M592,351 Q630,318 660,290 Q674,272 681,257" fill="none" stroke="rgba(0,212,255,0.25)" stroke-width="0.8" stroke-dasharray="4,3"/>
+        <circle cx="630" cy="315" r="1.6" fill="rgba(0,212,255,0.45)"/>
+
+        <!-- Bubbles -->
+        <circle cx="650" cy="490" r="2" fill="none" stroke="rgba(0,212,255,0.38)" stroke-width="0.7"><animate attributeName="cy" values="490;252" dur="7s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.6;0" dur="7s" repeatCount="indefinite"/></circle>
+        <circle cx="710" cy="470" r="1.5" fill="none" stroke="rgba(0,212,255,0.28)" stroke-width="0.6"><animate attributeName="cy" values="470;250" dur="9s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.5;0" dur="9s" repeatCount="indefinite"/></circle>
+        <circle cx="672" cy="450" r="1.2" fill="none" stroke="rgba(0,184,169,0.3)" stroke-width="0.5"><animate attributeName="cy" values="450;252" dur="8s" begin="2.5s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.4;0" dur="8s" begin="2.5s" repeatCount="indefinite"/></circle>
+        </g><!-- end #drone-descend -->
+
+        <!-- ── DOCKING STATION LABEL ── -->
+        <rect x="730" y="248" width="94" height="18" rx="3" fill="rgba(0,212,255,0.07)" stroke="rgba(0,212,255,0.25)" stroke-width="0.6"/>
+        <text x="777" y="260" text-anchor="middle" fill="rgba(0,212,255,0.8)" font-size="7.5" font-family="monospace">DOCKING STATION</text>
+        <line x1="730" y1="257" x2="719" y2="257" stroke="rgba(0,212,255,0.35)" stroke-width="0.7"/>
+        <rect x="715" y="251" width="5" height="12" rx="1.5" fill="#00d4ff" opacity="0.6">
+          <animate attributeName="opacity" values="0.6;0.2;0.6" dur="3s" repeatCount="indefinite"/>
+        </rect>
+
+        <!-- ── VON MISES LEGEND ── -->
+        <rect x="30" y="270" width="100" height="180" rx="7" fill="rgba(3,12,24,0.88)" stroke="rgba(0,212,255,0.2)" stroke-width="0.7"/>
+        <rect x="30" y="270" width="100" height="21" rx="7" fill="rgba(0,212,255,0.05)"/>
+        <text x="80" y="284.5" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-size="7.5" font-family="monospace" font-weight="bold">Von Mises [N]</text>
+        <line x1="30" y1="291" x2="130" y2="291" stroke="rgba(0,212,255,0.12)" stroke-width="0.5"/>
+        <rect x="42" y="297" width="20" height="130" rx="2" fill="url(#legG)"/>
+        <line x1="40" y1="303" x2="63" y2="303" stroke="#ff3300" stroke-width="1.4" opacity="0.8"/>
+        <g font-family="monospace" font-size="7" fill="rgba(255,255,255,0.45)">
+          <text x="67" y="301">3.2e6</text>
+          <text x="67" y="328">2.4e6</text>
+          <text x="67" y="355">1.6e6</text>
+          <text x="67" y="382">0.8e6</text>
+          <text x="67" y="427">0.0e2</text>
+        </g>
+
+        <!-- ── STRUCTURAL HEALTH MONITOR ── -->
+        <rect x="820" y="262" width="220" height="158" rx="8" fill="rgba(3,12,24,0.9)" stroke="rgba(0,212,255,0.22)" stroke-width="0.8"/>
+        <rect x="820" y="262" width="220" height="22" rx="8" fill="rgba(0,212,255,0.06)"/>
+        <text x="830" y="277" fill="#00d4ff" font-size="8" font-family="monospace" font-weight="bold" letter-spacing="0.06em">STRUCTURAL HEALTH MONITOR</text>
+        <line x1="820" y1="284" x2="1040" y2="284" stroke="rgba(0,212,255,0.13)" stroke-width="0.5"/>
+        <g font-family="monospace" font-size="8">
+          <text x="830" y="300" fill="rgba(255,255,255,0.38)">Wall Thickness</text><text x="1032" y="300" text-anchor="end" fill="#00ffc3" font-weight="bold">18.2 mm</text>
+          <line x1="820" y1="306" x2="1040" y2="306" stroke="rgba(255,255,255,0.04)" stroke-width="0.4"/>
+          <text x="830" y="321" fill="rgba(255,255,255,0.38)">Corrosion Rate</text><text x="1032" y="321" text-anchor="end" fill="#ffaa00" font-weight="bold">0.12 mm/yr</text>
+          <line x1="820" y1="327" x2="1040" y2="327" stroke="rgba(255,255,255,0.04)" stroke-width="0.4"/>
+          <text x="830" y="342" fill="rgba(255,255,255,0.38)">CP Potential</text><text x="1032" y="342" text-anchor="end" fill="#00d4ff" font-weight="bold">-1.04 V</text>
+          <line x1="820" y1="348" x2="1040" y2="348" stroke="rgba(255,255,255,0.04)" stroke-width="0.4"/>
+          <text x="830" y="363" fill="rgba(255,255,255,0.38)">Scour Depth</text><text x="1032" y="363" text-anchor="end" fill="#00ffc3" font-weight="bold">0.3 m</text>
+          <line x1="820" y1="369" x2="1040" y2="369" stroke="rgba(255,255,255,0.04)" stroke-width="0.4"/>
+          <text x="830" y="384" fill="rgba(255,255,255,0.38)">Defects Found</text><text x="1032" y="384" text-anchor="end" fill="#ff4d6d" font-weight="bold">2 FLAGGED</text>
+        </g>
+        <line x1="820" y1="391" x2="1040" y2="391" stroke="rgba(0,212,255,0.09)" stroke-width="0.4"/>
+        <circle cx="828" cy="403" r="3" fill="#00d4ff"><animate attributeName="opacity" values="1;0.2;1" dur="2s" repeatCount="indefinite"/></circle>
+        <text x="838" y="406.5" fill="rgba(0,212,255,0.48)" font-size="7" font-family="monospace">LAST SCAN: 4h 12m ago · AUTO-UPLOADING</text>
+
+        <!-- ── DEPTH RULER ── -->
+        <line x1="740" y1="248" x2="740" y2="500" stroke="rgba(0,212,255,0.13)" stroke-width="0.8" stroke-dasharray="4,3"/>
+        <g stroke="rgba(0,212,255,0.35)" stroke-width="0.9">
+          <line x1="735" y1="248" x2="745" y2="248"/>
+          <line x1="735" y1="374" x2="745" y2="374"/>
+          <line x1="735" y1="500" x2="745" y2="500"/>
+        </g>
+        <g font-family="monospace" font-size="7.5" fill="rgba(255,255,255,0.3)">
+          <text x="750" y="252">0 m</text>
+          <text x="750" y="378">~25 m</text>
+          <text x="750" y="504">~35 m</text>
+        </g>
+        <text x="742" y="320" fill="rgba(0,212,255,0.38)" font-size="11">↓</text>
       </svg>
-    </div>
   </div>
 </section>
 
@@ -577,7 +584,7 @@ footer{background:var(--ink);border-top:1px solid var(--border-d);padding:1.5rem
           <line x1="410" y1="40" x2="410" y2="480" stroke="rgba(0,212,255,0.25)" stroke-width="1" stroke-dasharray="none"/>
           <!-- Arrow pointing down -->
           <path d="M407,50 L410,42 L413,50" fill="rgba(0,212,255,0.5)"/>
-          <text x="422" y="48" fill="#00d4ff" font-size="9" font-family="monospace" font-weight="bold">↓ 50m</text>
+          <text x="422" y="48" fill="#00d4ff" font-size="9" font-family="monospace" font-weight="bold">↓ 200m</text>
           <text x="422" y="62" fill="rgba(255,255,255,0.4)" font-size="7.5" font-family="monospace">Dive depth</text>
           <!-- Depth tick marks -->
           <g stroke="rgba(0,212,255,0.25)" stroke-width="0.7">
@@ -586,10 +593,10 @@ footer{background:var(--ink);border-top:1px solid var(--border-d);padding:1.5rem
             <line x1="406" y1="300" x2="414" y2="300"/>
             <line x1="406" y1="400" x2="414" y2="400"/>
           </g>
-          <text x="390" y="103" text-anchor="end" fill="rgba(255,255,255,0.25)" font-size="7" font-family="monospace">10m</text>
-          <text x="390" y="203" text-anchor="end" fill="rgba(255,255,255,0.25)" font-size="7" font-family="monospace">25m</text>
-          <text x="390" y="303" text-anchor="end" fill="rgba(255,255,255,0.25)" font-size="7" font-family="monospace">40m</text>
-          <text x="390" y="403" text-anchor="end" fill="rgba(255,255,255,0.25)" font-size="7" font-family="monospace">50m</text>
+          <text x="390" y="103" text-anchor="end" fill="rgba(255,255,255,0.25)" font-size="7" font-family="monospace">50m</text>
+          <text x="390" y="203" text-anchor="end" fill="rgba(255,255,255,0.25)" font-size="7" font-family="monospace">100m</text>
+          <text x="390" y="303" text-anchor="end" fill="rgba(255,255,255,0.25)" font-size="7" font-family="monospace">150m</text>
+          <text x="390" y="403" text-anchor="end" fill="rgba(255,255,255,0.25)" font-size="7" font-family="monospace">200m</text>
 
           <!-- TITLE -->
           <text x="24" y="36" fill="rgba(255,255,255,0.7)" font-size="10" font-family="monospace" font-weight="bold" letter-spacing="0.06em">OPERATIONAL RANGE</text>
@@ -665,7 +672,7 @@ footer{background:var(--ink);border-top:1px solid var(--border-d);padding:1.5rem
           <text x="36" y="398" fill="#00d4ff" font-size="7.5" font-family="monospace" font-weight="bold" letter-spacing="0.08em">DRONE SPECS</text>
           <line x1="24" y1="404" x2="179" y2="404" stroke="rgba(0,212,255,0.12)" stroke-width="0.5"/>
           <g font-family="monospace" font-size="7.5">
-            <text x="36" y="420" fill="rgba(255,255,255,0.4)">Dive depth</text><text x="170" y="420" text-anchor="end" fill="var(--white)">50 m</text>
+            <text x="36" y="420" fill="rgba(255,255,255,0.4)">Dive depth</text><text x="170" y="420" text-anchor="end" fill="var(--white)">200 m</text>
             <text x="36" y="434" fill="rgba(255,255,255,0.4)">Coverage</text><text x="170" y="434" text-anchor="end" fill="var(--white)">5 turbines</text>
             <text x="36" y="448" fill="rgba(255,255,255,0.4)">Powered by</text><text x="170" y="448" text-anchor="end" fill="var(--white)">Turbine grid</text>
             <text x="36" y="462" fill="rgba(255,255,255,0.4)">Vessel needed</text><text x="170" y="462" text-anchor="end" fill="#00ffc3">None</text>
@@ -732,35 +739,6 @@ footer{background:var(--ink);border-top:1px solid var(--border-d);padding:1.5rem
         <h2 style="color:var(--ink)">Offshore wind is green.<br>Its maintenance shouldn't undermine that.</h2>
         <p>Every traditional inspection campaign dispatches a diesel-powered offshore support vessel. A single vessel campaign releases an estimated 30–60 tonnes of CO₂ — for one wind farm, one visit. With thousands of turbines requiring recurring inspections, the cumulative footprint is significant.</p>
         <p style="margin-top:1rem">Sunken Robotics is powered by the wind farm itself. Zero vessel fuel. Zero mobilisation emissions. By enabling continuous monitoring, we also prevent premature decommissioning — the highest-carbon outcome of all.</p>
-        <div class="co2-points">
-          <div class="co2-pt">
-            <div class="co2-icon">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00b8a9" stroke-width="2" stroke-linecap="round"><path d="M12 22V12M12 12C12 7 17 4 17 4S12 7 12 12ZM12 12C12 7 7 4 7 4S12 7 12 12Z"/></svg>
-            </div>
-            <div class="co2-pt-text">
-              <h4>Turbine-powered operation</h4>
-              <p>Drone charges from the wind turbine grid — zero fossil fuel consumption during inspection cycles.</p>
-            </div>
-          </div>
-          <div class="co2-pt">
-            <div class="co2-icon">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00b8a9" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M8 12l2 2 4-4"/></svg>
-            </div>
-            <div class="co2-pt-text">
-              <h4>Vessel campaigns eliminated</h4>
-              <p>Estimated 30–60 tCO₂ saved per campaign per wind farm by replacing offshore support vessels.</p>
-            </div>
-          </div>
-          <div class="co2-pt">
-            <div class="co2-icon">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00b8a9" stroke-width="2" stroke-linecap="round"><path d="M3 3l18 18M10 10a2 2 0 102.83 2.83"/></svg>
-            </div>
-            <div class="co2-pt-text">
-              <h4>Lifetime extension enabled</h4>
-              <p>Continuous condition data supports confident life-extension decisions — preventing early decommissioning, the most carbon-intensive outcome.</p>
-            </div>
-          </div>
-        </div>
       </div>
 
       <!-- CO2 DIAGRAM -->
@@ -857,6 +835,38 @@ footer{background:var(--ink);border-top:1px solid var(--border-d);padding:1.5rem
         </svg>
       </div>
     </div>
+
+    <!-- 3 cards full-width below -->
+    <div class="co2-points reveal" style="transition-delay:0.1s">
+      <div class="co2-pt">
+        <div class="co2-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00b8a9" stroke-width="2" stroke-linecap="round"><path d="M12 22V12M12 12C12 7 17 4 17 4S12 7 12 12ZM12 12C12 7 7 4 7 4S12 7 12 12Z"/></svg>
+        </div>
+        <div class="co2-pt-text">
+          <h4>Turbine-powered operation</h4>
+          <p>Drone charges from the wind turbine grid — zero fossil fuel consumption during inspection cycles.</p>
+        </div>
+      </div>
+      <div class="co2-pt">
+        <div class="co2-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00b8a9" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M8 12l2 2 4-4"/></svg>
+        </div>
+        <div class="co2-pt-text">
+          <h4>Vessel campaigns eliminated</h4>
+          <p>Estimated 30–60 tCO₂ saved per campaign per wind farm by replacing offshore support vessels.</p>
+        </div>
+      </div>
+      <div class="co2-pt">
+        <div class="co2-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00b8a9" stroke-width="2" stroke-linecap="round"><path d="M3 3l18 18M10 10a2 2 0 102.83 2.83"/></svg>
+        </div>
+        <div class="co2-pt-text">
+          <h4>Lifetime extension enabled</h4>
+          <p>Continuous condition data supports confident life-extension decisions — preventing early decommissioning, the most carbon-intensive outcome.</p>
+        </div>
+      </div>
+    </div>
+
   </div>
 </section>
 
@@ -1052,6 +1062,32 @@ const costObs=new IntersectionObserver(entries=>{
 },{threshold:0.3});
 const impSec=document.getElementById('impact');
 if(impSec)costObs.observe(impSec);
+
+/* ═══ DRONE DESCENT ON SCROLL ═══ */
+(function(){
+  const g=document.getElementById('drone-descend');
+  const sec=document.getElementById('diagram');
+  if(!g||!sec)return;
+  function update(){
+    const rect=sec.getBoundingClientRect();
+    const svgEl=sec.querySelector('svg');
+    if(!svgEl)return;
+    const svgW=svgEl.getBoundingClientRect().width;
+    // Travel distance: ~140 SVG units out of 1400 viewBox width
+    const travelPx=(140/1400)*svgW;
+    const vh=window.innerHeight;
+    // progress 0→1 as section scrolls from bottom of screen to 40% in
+    const raw=(vh-rect.top)/(vh*0.6);
+    const p=Math.max(0,Math.min(1,raw));
+    // ease out cubic
+    const e=1-Math.pow(1-p,3);
+    g.style.transform=`translateY(${-travelPx*(1-e)}px)`;
+    g.style.opacity=Math.min(1,p*1.8);
+  }
+  window.addEventListener('scroll',update,{passive:true});
+  window.addEventListener('resize',update,{passive:true});
+  update();
+})();
 
 /* ═══ NAV HIGHLIGHT ═══ */
 const navAs=document.querySelectorAll('.nav-links a');
