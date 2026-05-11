@@ -48,18 +48,18 @@ nav{
   height:36px;width:auto;display:block;
   filter:brightness(1.45) contrast(1.15) saturate(1.35) drop-shadow(0 0 6px rgba(0,180,255,0.45));
 }
-/* Glisten sweep animation */
-.logo::after{
-  content:'';position:absolute;top:-10%;left:-120%;
-  width:55%;height:120%;
-  background:linear-gradient(105deg,transparent 30%,rgba(255,255,255,0.55) 50%,transparent 70%);
-  transform:skewX(-18deg);
-  animation:logoShine 3.5s ease-in-out infinite;
+/* Logo bubbles (JS-injected, play once on load) */
+.logo-bubble{
+  position:absolute;bottom:2px;border-radius:50%;
+  background:rgba(0,212,255,0.55);
+  border:1px solid rgba(0,212,255,0.85);
+  animation:logoBubble 1.6s ease-out forwards;
   pointer-events:none;
 }
-@keyframes logoShine{
-  0%{left:-120%}
-  45%,100%{left:160%}
+@keyframes logoBubble{
+  0%{transform:translateY(0) scale(1);opacity:0.85}
+  60%{opacity:0.5}
+  100%{transform:translateY(-52px) scale(0.25);opacity:0}
 }
 .nav-links{display:flex;gap:2.2rem;list-style:none}
 .nav-links a{color:rgba(255,255,255,0.55);text-decoration:none;font-size:0.8rem;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;transition:color 0.2s}
@@ -1161,6 +1161,30 @@ window.addEventListener('scroll',()=>{
   });
   navAs.forEach(a=>a.style.color=a.getAttribute('href')==='#'+cur?'var(--white)':'');
 },{passive:true});
+
+/* ── LOGO BUBBLES: spawn once on load ── */
+(function(){
+  const logo=document.querySelector('.logo');
+  if(!logo)return;
+  logo.style.overflow='hidden';
+  function spawnBubbles(){
+    const count=9;
+    for(let i=0;i<count;i++){
+      const b=document.createElement('span');
+      b.className='logo-bubble';
+      const size=3+Math.random()*6;
+      b.style.cssText=
+        'left:'+(8+Math.random()*84)+'%;'+
+        'width:'+size+'px;height:'+size+'px;'+
+        'animation-delay:'+(Math.random()*0.9)+'s;'+
+        'animation-duration:'+(1.2+Math.random()*1)+'s;';
+      logo.appendChild(b);
+      b.addEventListener('animationend',()=>b.remove(),{once:true});
+    }
+  }
+  // Small delay so page has painted first
+  setTimeout(spawnBubbles,400);
+})();
 </script>
 </body>
 </html>
