@@ -43,7 +43,8 @@ nav{
   backdrop-filter:blur(14px);
   border-bottom:1px solid var(--border-d);
 }
-.logo{font-size:1rem;font-weight:800;letter-spacing:0.07em;text-transform:uppercase;color:var(--cyan);text-decoration:none}
+.logo{text-decoration:none;display:flex;align-items:center}
+.nav-logo{height:36px;width:auto;display:block}
 .nav-links{display:flex;gap:2.2rem;list-style:none}
 .nav-links a{color:rgba(255,255,255,0.55);text-decoration:none;font-size:0.8rem;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;transition:color 0.2s}
 .nav-links a:hover{color:var(--white)}
@@ -205,6 +206,7 @@ footer{background:var(--ink);border-top:1px solid var(--border-d);padding:1.5rem
 @media(max-width:640px){
   nav{padding:0 1rem}
   .nav-links{display:none}
+  .nav-logo{height:28px}
   #mission,#how,#impact,#co2,#team,#diagram{padding:4rem 1rem}
   #contact{padding:5rem 1rem}
   .wrap{padding:0 1rem}
@@ -248,7 +250,7 @@ footer{background:var(--ink);border-top:1px solid var(--border-d);padding:1.5rem
 
 <!-- NAV -->
 <nav>
-  <a class="logo" href="#hero">Sunken Robotics</a>
+  <a class="logo" href="#hero"><img src="logo.png" alt="Sunken Robotics" class="nav-logo"></a>
   <ul class="nav-links">
     <li><a href="#mission">Mission</a></li>
     <li><a href="#how">Technology</a></li>
