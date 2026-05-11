@@ -150,7 +150,7 @@ section{position:relative}
 .impact-cell h3{font-size:0.7rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--cyan);margin-bottom:1.2rem}
 .impact-big{font-size:clamp(3rem,7vw,5.5rem);font-weight:800;line-height:1;letter-spacing:-0.04em;margin-bottom:0.6rem}
 .impact-cell p{color:rgba(255,255,255,0.45);font-size:0.9rem;line-height:1.7}
-.cost-before-after{display:flex;align-items:center;gap:1rem;margin-bottom:1rem;flex-wrap:wrap}
+.cost-before-after{display:flex;align-items:center;gap:1rem;margin-bottom:1rem;flex-wrap:nowrap}
 .cost-amt{font-size:2rem;font-weight:800;letter-spacing:-0.03em}
 .cost-amt.old{color:rgba(255,77,109,0.7);text-decoration:line-through}
 .cost-amt.new{color:var(--cyan)}
@@ -208,17 +208,21 @@ footer{background:var(--ink);border-top:1px solid var(--border-d);padding:1.5rem
   #mission,#how,#impact,#co2,#team,#diagram{padding:4rem 1rem}
   #contact{padding:5rem 1rem}
   .wrap{padding:0 1rem}
+  /* Hero: top-align on mobile to remove dead space above content */
+  #hero{justify-content:flex-start}
+  .hero-inner{padding:4.5rem 1rem 3rem}
   h1{font-size:1.95rem;letter-spacing:-0.02em}
   h2{font-size:1.65rem}
-  .hero-inner{padding:3rem 1rem 2.5rem}
-  .hero-tag{font-size:0.65rem}
+  .hero-tag{font-size:0.63rem;padding:0.25rem 0.8rem}
   .hero-sub{font-size:0.92rem}
   .btn-p,.btn-o{padding:0.8rem 1.5rem;font-size:0.84rem}
   .stat-num{font-size:2.6rem}
   .stat-block{padding:1.3rem 1.4rem}
   .impact-big{font-size:2.8rem}
   .impact-cell{padding:1.8rem 1.2rem}
-  .cost-amt{font-size:1.6rem}
+  /* Cost numbers: no wrap + smaller so they always stay on one line */
+  .cost-before-after{gap:0.5rem}
+  .cost-amt{font-size:1.35rem}
   .mission-grid,.co2-grid{gap:2.5rem}
   .diagram-wrap svg{min-width:620px;width:620px}
   .email-link{font-size:0.92rem;padding:0.85rem 1.2rem;width:100%;justify-content:center}
@@ -259,7 +263,7 @@ footer{background:var(--ink);border-top:1px solid var(--border-d);padding:1.5rem
 <section id="hero">
   <canvas id="hero-canvas"></canvas>
   <div class="hero-inner">
-    <div class="hero-tag"><span class="blink"></span>Seed Round — Eindhoven, April 2026</div>
+    <div class="hero-tag"><span class="blink"></span>Autonomous Underwater Inspection · Eindhoven, 2026</div>
     <h1 class="hero-title reveal">
       We inspect what<br>
       <em>ships can't reach.</em>
@@ -916,8 +920,8 @@ footer{background:var(--ink);border-top:1px solid var(--border-d);padding:1.5rem
 <section id="team">
   <div class="wrap">
     <span class="eyebrow reveal">The Team</span>
-    <h2 class="reveal">Built by engineers who<br>understand the ocean.</h2>
-    <p class="sub reveal" style="text-align:center;color:rgba(255,255,255,0.4);margin-top:0.8rem;margin-bottom:4rem;max-width:480px;margin-left:auto;margin-right:auto">Six engineering students from Eindhoven University of Technology, combining robotics, AI, and offshore structural expertise.</p>
+    <h2 class="reveal">Built by students who<br>understand the ocean.</h2>
+    <p class="sub reveal" style="text-align:center;color:rgba(255,255,255,0.4);margin-top:0.8rem;margin-bottom:4rem;max-width:480px;margin-left:auto;margin-right:auto">Engineering students from Eindhoven University of Technology, combining robotics, AI, and offshore structural expertise.</p>
     <div class="team-grid">
 
       <div class="team-card reveal" style="transition-delay:0.0s">
